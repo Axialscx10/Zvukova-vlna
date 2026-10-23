@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-container-high": "#2a2a2a", "on-secondary-container": "#00686f", "secondary-fixed-dim": "#00dbe9", "surface-container": "#201f1f", "primary-fixed-dim": "#ffb4a9", "surface-container-low": "#1c1b1b", "on-tertiary-fixed": "#2c0051", "on-tertiary-fixed-variant": "#6900b3", "surface-tint": "#ffb4a9", "on-primary-container": "#5c0002", "on-surface-variant": "#eabcb5", "on-surface": "#e5e2e1", "tertiary-fixed-dim": "#ddb7ff", "on-error": "#690005", "error": "#ffb4ab", "on-primary-fixed-variant": "#930005", "surface-variant": "#353534", "surface": "#131313", "surface-container-highest": "#353534", "on-background": "#e5e2e1", "outline": "#b08781", "primary-fixed": "#ffdad5", "secondary-container": "#00eefc", "secondary": "#d3fbff", "on-error-container": "#ffdad6", "primary-container": "#ff5545", "background": "#131313", "on-primary": "#690002", "outline-variant": "#5f3e3a", "tertiary": "#ddb7ff", "on-primary-fixed": "#410001", "on-secondary-fixed": "#002022", "surface-bright": "#393939", "surface-container-lowest": "#0e0e0e", "on-tertiary-container": "#400071", "inverse-primary": "#c00009", "primary": "#ffb4a9", "secondary-fixed": "#7df4ff", "tertiary-container": "#b76dff", "on-secondary-fixed-variant": "#004f54", "on-tertiary": "#490080", "inverse-surface": "#e5e2e1", "surface-dim": "#131313", "on-secondary": "#00363a", "tertiary-fixed": "#f0dbff", "inverse-on-surface": "#313030", "error-container": "#93000a" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter": "1rem", "space-md": "1rem", "margin-desktop": "2.5rem", "margin-tablet": "1.5rem", "space-lg": "1.5rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "space-xl": "2rem", "gutter-sm": "0.75rem", "margin": "1rem" }, "fontFamily": { "body-lg": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"] }, "fontSize": { "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-xl-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "headline-md": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "label-sm": ["10px", { "lineHeight": "12px", "letterSpacing": "0.05em", "fontWeight": "700" }], "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }], "label-lg": ["14px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "600" }], "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "800" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-sm": ["16px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "600" }], "headline-lg-mobile": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "700" }] } } } }</script><style>@layer base { html, body { width: 100%; margin: 0; padding: 0; background-color: #131313; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } } ::-webkit-scrollbar { display: none; }</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface text-on-surface font-body-md text-body-md min-h-screen flex flex-col selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 inset-x-0 z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.4)]"><div class="h-16 px-gutter flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="SoundWave Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XNbJU8Bha_PoiUwOZeH1JHNTJyMGvtEGBT8Zk0fwYou9udUULl9u7BSZHEm48k2Hr9r9pBhEQlnq4BHbaXSGx_s2eNT8brkl6gBiFr9XsnXv2sFLYDwIT65KI06sl-DuIHczyPGpQtLNvOKnUHlQYFcdUoH6WgKeaDFqfUNPHQgkCG71_fcQwxHqi1GtwWTNP20eBS_QPJIlUSowtqpNuRGviC_3mzrOBC6UodihHvP0xTC9ZrCKcE80A"/><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface">SoundWave</span><span class="hidden">Library</span></div><div class="flex items-center gap-space-xs"><button class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface hover:text-primary transition-colors active:scale-95"><span class="material-symbols-outlined text-[24px]">cast</span></button><button class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface hover:text-primary transition-colors active:scale-95"><span class="material-symbols-outlined text-[24px]">search</span></button><div class="w-11 h-11 flex items-center justify-center pl-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJbRXDLCgliMAa42OjzEx7JNhbXFpEOifUxVb7uKaXETuWAT6cOCjIG4ctvJTGrHglfS4kCJiqvn_R8aeEVO91I-IRPnKCKyZk0VtKEWojOFiB2sw4ykQmWoHfukCeSmfDX__S9KHac9lFsTBUW1djAMY90G9sya6LgS3USaKoHUB7UQhagpY1hUAnS2fPbaA4tyRv6WtJGa9nZOWq-y6p-0tmIGzdeHezp8-6pPG9_1pbI0uII6RI"/></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-20 bg-surface"><div class="flex flex-col w-full pb-28">
+<!-- Dynamic Acoustic Aura Overlay -->
+<div class="pointer-events-none fixed inset-0 z-0 overflow-hidden opacity-30">
+<div class="absolute -top-32 -left-20 w-80 h-80 rounded-full bg-primary-container blur-[100px] animate-pulse"></div>
+<div class="absolute top-1/3 -right-24 w-72 h-72 rounded-full bg-secondary-container blur-[110px] opacity-20"></div>
+<div class="absolute bottom-20 left-10 w-96 h-96 rounded-full bg-tertiary blur-[130px] opacity-15"></div>
+</div>
+<div class="relative z-10 flex flex-col w-full px-gutter space-y-space-md">
+<!-- Filter Chips Scroll Area -->
+<div class="relative -mx-gutter px-gutter overflow-x-auto no-scrollbar pt-space-xs pb-space-xs">
+<div class="flex items-center gap-space-sm whitespace-nowrap" id="filter-chip-group">
+<button class="filter-chip px-space-md h-8 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md shadow-[0_0_16px_rgba(255,85,69,0.35)] flex items-center gap-1.5 transition-transform active:scale-95" data-filter="playlists">
+<span class="material-symbols-outlined text-[16px]">queue_music</span>
+<span>Playlists</span>
+</button>
+<button class="filter-chip px-space-md h-8 rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md hover:text-on-surface hover:bg-surface-bright transition-all active:scale-95 flex items-center gap-1.5" data-filter="songs">
+<span>Skladby</span>
+</button>
+<button class="filter-chip px-space-md h-8 rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md hover:text-on-surface hover:bg-surface-bright transition-all active:scale-95 flex items-center gap-1.5" data-filter="albums">
+<span>Albumy</span>
+</button>
+<button class="filter-chip px-space-md h-8 rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md hover:text-on-surface hover:bg-surface-bright transition-all active:scale-95 flex items-center gap-1.5" data-filter="artists">
+<span>Interpreti</span>
+</button>
+<button class="filter-chip px-space-md h-8 rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md hover:text-on-surface hover:bg-surface-bright transition-all active:scale-95 flex items-center gap-1.5" data-filter="offline">
+<span class="material-symbols-outlined text-[15px] text-secondary-fixed-dim">download_done</span>
+<span>Stiahnuté</span>
+</button>
+</div>
+</div>
+<!-- Sorting & Layout Controls Toolbar -->
+<div class="flex items-center justify-between py-space-xs">
+<!-- Sort Trigger Dropdown -->
+<button class="flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-surface-container-low text-on-surface hover:bg-surface-container active:scale-95 transition-all group">
+<span class="material-symbols-outlined text-primary text-[18px]">swap_vert</span>
+<span class="font-label-md text-label-md font-semibold tracking-tight">Posledná aktivita</span>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant group-hover:translate-y-0.5 transition-transform">keyboard_arrow_down</span>
+</button>
+<!-- View and Search actions -->
+<div class="flex items-center gap-space-xs">
+<button aria-label="Prepnúť zobrazenie" class="w-9 h-9 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high active:scale-90 transition-all" id="viewToggleBtn">
+<span class="material-symbols-outlined text-[20px]">grid_view</span>
+</button>
+<button aria-label="Filtrovať v knižnici" class="w-9 h-9 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high active:scale-90 transition-all">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</button>
+</div>
+</div>
+<!-- Pinned Priority Hubs: Liked & Downloads -->
+<div class="grid grid-cols-2 gap-space-sm">
+<!-- Liked Songs Hub Card -->
+<div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-surface-container-high via-surface-container to-surface-container-low p-space-md flex flex-col justify-between group active:scale-[0.98] transition-transform cursor-pointer shadow-lg shadow-black/40">
+<div class="absolute -right-4 -bottom-4 w-24 h-24 bg-primary-container/20 rounded-full blur-xl pointer-events-none group-hover:bg-primary-container/35 transition-all"></div>
+<div class="flex items-start justify-between">
+<div class="relative w-12 h-12 rounded-lg bg-gradient-to-br from-primary-container to-primary flex items-center justify-center shadow-[0_4px_16px_rgba(255,85,69,0.45)]">
+<span class="material-symbols-outlined text-on-primary text-[26px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<div class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[10px]" style="font-variation-settings: 'FILL' 1;">push_pin</span>
+</div>
+</div>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded-full bg-surface-container-highest/80 text-on-surface-variant font-label-sm text-label-sm">
+            Auto
+          </span>
+</div>
+<div class="mt-space-md">
+<h3 class="font-headline-sm text-headline-sm text-on-surface tracking-tight group-hover:text-primary transition-colors truncate">Obľúbené</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 flex items-center gap-1">
+<span>342 skladieb</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-primary font-semibold">Aktívne</span>
+</p>
+</div>
+</div>
+<!-- Downloads Offline Hub Card -->
+<div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-surface-container-high via-surface-container to-surface-container-low p-space-md flex flex-col justify-between group active:scale-[0.98] transition-transform cursor-pointer shadow-lg shadow-black/40">
+<div class="absolute -right-4 -bottom-4 w-24 h-24 bg-secondary-container/15 rounded-full blur-xl pointer-events-none group-hover:bg-secondary-container/25 transition-all"></div>
+<div class="flex items-start justify-between">
+<div class="relative w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary-fixed shadow-[0_4px_16px_rgba(0,238,252,0.2)]">
+<span class="material-symbols-outlined text-[24px]">offline_pin</span>
+<span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+<span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-secondary"></span>
+</div>
+<div class="flex items-center gap-0.5 text-secondary-fixed-dim">
+<span class="material-symbols-outlined text-[16px]">sync</span>
+</div>
+</div>
+<div class="mt-space-md">
+<h3 class="font-headline-sm text-headline-sm text-on-surface tracking-tight group-hover:text-secondary transition-colors truncate">Stiahnuté</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 truncate">
+            18.4 GB • 1,240 skladieb
+          </p>
+</div>
+</div>
+</div>
+<!-- Section Title & Meta -->
+<div class="flex items-center justify-between pt-space-xs">
+<div class="flex items-center gap-space-xs">
+<h2 class="font-headline-md text-headline-md text-on-surface font-extrabold tracking-tight">Kolekcia &amp; Zoznamy</h2>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm font-bold">Navidrome</span>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center font-label-md text-label-md">
+<span>Všetko</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+<!-- Library Playlist Stream / Interactive Track Rows -->
+<div class="flex flex-col space-y-space-xs" id="libraryListContainer">
+<!-- Item 1: Synthwave Nights (Pinned, Audiophile, Active Synced) -->
+<div class="flex items-center justify-between p-2 rounded-xl bg-surface-container-low hover:bg-surface-container transition-all group cursor-pointer active:scale-[0.99]">
+<div class="flex items-center gap-space-md min-w-0 flex-1 mr-2">
+<div class="relative w-14 h-14 rounded-lg overflow-hidden shrink-0 shadow-md shadow-black/50 bg-surface-container-highest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Vibrant neon synthwave grid sunset album art with chrome typography, deep crimson and magenta reflections on dark asphalt, high fidelity cinematic aesthetics" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjguji4ZkE3ECuG3ikOsPR6pKw5pJmRi-Zix2tf-wznus1JadmWt9gdmP5l-CKMkqhxJu7H5dy-XOkLWYpzNsioo9qmO0P25586J3YmspszWnz37OeckNrgXbz04yHxa6DaeWSRj5S06vbYOZbYC4QlnEpxiTdDqoxT6Gk_2EmUo_oXzfZvMt0L5LZ9jjaCouoz_dvOWtbBCpVBTBabrE7YwsyyhQllQM4I99cDU1RTMvT9OXHpYzw"/>
+<div class="absolute bottom-1 right-1 w-4 h-4 rounded bg-surface/80 backdrop-blur-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[11px]" style="font-variation-settings: 'FILL' 1;">push_pin</span>
+</div>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate group-hover:text-primary transition-colors">Synthwave Nights</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-sm text-body-sm truncate mt-0.5">
+<span class="material-symbols-outlined text-[13px] text-primary-container shrink-0">cloud_done</span>
+<span class="text-on-surface truncate">Navidrome Synced</span>
+<span>•</span>
+<span class="shrink-0">64 skladieb</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0">
+<button aria-label="Možnosti" class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Item 2: Cyberpunk Focus & Flow -->
+<div class="flex items-center justify-between p-2 rounded-xl bg-surface-container-low hover:bg-surface-container transition-all group cursor-pointer active:scale-[0.99]">
+<div class="flex items-center gap-space-md min-w-0 flex-1 mr-2">
+<div class="relative w-14 h-14 rounded-lg overflow-hidden shrink-0 shadow-md shadow-black/50 bg-surface-container-highest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Futuristic cyberpunk city at night with neon holographic displays in electric cyan and crimson, foggy alley, dark atmospheric render" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoIY_Gt56thl5E-7LPKt4W9yzUkRVoxl4xm6DYBnmO6rk99qP0_ATJrtVukq70R7bqcEuNxo2vVNlORGQ5kFSFDfclGzvSXfg3Z5oc8CJNv_j9wbtBJHSDqwuDMm5btroFOulvEZ_PWiyrEnjmxTzcSALOY0dsnvL-tqCL1cZ4nTWxQ0lA6w6UGrht3Gf-u7L6XE4grIWvglISqUPTp_yBvhx_07GVHqMl53wuMTJCuntaUXno0nOA"/>
+<div class="absolute top-1 left-1 px-1 rounded bg-black/60 backdrop-blur-sm text-[9px] font-bold text-secondary-fixed">
+              HQ
+            </div>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate group-hover:text-primary transition-colors">Cyberpunk Focus &amp; Flow</span>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-sm text-body-sm truncate mt-0.5">
+<span>Playlist</span>
+<span>•</span>
+<span>112 skladieb</span>
+<span>•</span>
+<span class="text-outline">6 hod 20 min</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0">
+<button aria-label="Možnosti" class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Item 3: Midnight Lo-Fi (Offline Available with local cache badge) -->
+<div class="flex items-center justify-between p-2 rounded-xl bg-surface-container-low hover:bg-surface-container transition-all group cursor-pointer active:scale-[0.99]">
+<div class="flex items-center gap-space-md min-w-0 flex-1 mr-2">
+<div class="relative w-14 h-14 rounded-lg overflow-hidden shrink-0 shadow-md shadow-black/50 bg-surface-container-highest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Moody anime style bedroom study room at 3am with neon ambient rain outside the window, lo-fi aesthetic, warm desk lamp and cat sleeping" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-V9vzN1VpFVhDvUoM7S23F_MQDSfjEsj-m_GdgMXaFcf7dlrRjWTpMVFYo7Q2YsVHQtooOEF0iyy0uW4cjIDXu0pAblqgT8lBSGNVlEmKwqu3d1Wf4_zuDN9FOTuLBNHR9PF5Cl3ZxR4ZN_EdI25pZfZmy9gCud4SPfSRhP3T7be-rMZTpmmme58tucqgrilXydQNdJIpvM9Od-bNx2RVGTPfhRMN6bS3ktwdFdmIw4-E1ATDP9i_"/>
+<div class="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[10px] font-bold">check</span>
+</div>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate group-hover:text-primary transition-colors">Midnight Lo-Fi</span>
+<span class="px-1.5 py-0.2 rounded bg-surface-container-highest text-secondary-fixed text-[10px] font-bold">OFFLINE</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-sm text-body-sm truncate mt-0.5">
+<span class="text-on-surface">Osobné rádio</span>
+<span>•</span>
+<span>45 skladieb</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0">
+<button aria-label="Možnosti" class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Item 4: Lossless Audio Vault (FLAC 24-bit audiophile server star) -->
+<div class="flex items-center justify-between p-2 rounded-xl bg-surface-container-low hover:bg-surface-container transition-all group cursor-pointer active:scale-[0.99]">
+<div class="flex items-center gap-space-md min-w-0 flex-1 mr-2">
+<div class="relative w-14 h-14 rounded-lg overflow-hidden shrink-0 shadow-md shadow-black/50 bg-surface-container-highest flex items-center justify-center">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Minimalist audiophile vinyl turntable stylus on black acrylic platter, sleek mechanical macro shot, warm studio rim light and subtle neon scarlet reflection" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzLsvPHbX1hiD-acZhYE--3ObPP9oF3Gj1uyOEO0vLq9bx3x5clzZW-K2yunjmoqfis35Yt8Q5WqmJba2p9jBRWxEHmaTZv6hrtYFL5ffUxZWSN59TbutH9ATw4crmSm5pg6S4CRD_1cVLDzqD4ag--bgeP8yNLuwPYhrSi71em2ixBv8wEqVJGNDUYDGeFzD174XmCYA95vO8k1IdJruxATSFlf1v7Ln1d2y2m_Sx4AUAHFQNK4-T"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<span class="absolute bottom-1 left-1 text-[9px] font-extrabold tracking-wider text-secondary px-1 rounded bg-black/60">FLAC 24b</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center gap-1">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate group-hover:text-primary transition-colors">Lossless Audio Vault</span>
+<span class="material-symbols-outlined text-amber-400 text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-sm text-body-sm truncate mt-0.5">
+<span class="text-secondary font-medium">Navidrome Master</span>
+<span>•</span>
+<span>88 skladieb</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0">
+<button aria-label="Možnosti" class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Item 5: Retro Wave 80s -->
+<div class="flex items-center justify-between p-2 rounded-xl bg-surface-container-low hover:bg-surface-container transition-all group cursor-pointer active:scale-[0.99]">
+<div class="flex items-center gap-space-md min-w-0 flex-1 mr-2">
+<div class="relative w-14 h-14 rounded-lg overflow-hidden shrink-0 shadow-md shadow-black/50 bg-surface-container-highest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Vintage retro 80s cassette tape with neon red labeling, chrome edges, dark reflective background with soft magenta bokeh" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpkifyVSziH-FQB4yRCkBZtM-gcO_0GLmvZpo9t1VJnGePzQGFwtxrhw4H1Mm8viveWfr5ZC74hHgSihORBTdu8JhqxL0UfSUtZeeA8RypEgky7m8e6KFP38y8oMCqLWTf18gOcTJdAQR6uoyxRToArjKrRtTnApvuxHJa25vbLy3bEG_-QOa3jfSKwSOdUSGXuA-wB-TocNwA1Ee7z5SpIh1BQvnFLtgiYKd9zjDmqFCFi-a1p5Lk"/>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate group-hover:text-primary transition-colors">Retro Wave 80s Classics</span>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-sm text-body-sm truncate mt-0.5">
+<span>Kompilácia</span>
+<span>•</span>
+<span>50 skladieb</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0">
+<button aria-label="Možnosti" class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Create Playlist Prompt Banner -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container p-space-md flex items-center justify-between shadow-md">
+<div class="flex items-center gap-space-md">
+<div class="w-11 h-11 rounded-full bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">add</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Nový zoznam skladieb</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Vytvor alebo importuj z m3u</p>
+</div>
+</div>
+<button class="px-space-md py-1.5 rounded-full bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-bright active:scale-95 transition-all">
+        Vytvoriť
+      </button>
+</div>
+</div>
+<!-- FLOATING PERSISTENT GLASS DOCK / MINI-PLAYER -->
+<!-- Positioned fixed right above App Shell bottom navigation (bottom-16) -->
+<div class="fixed bottom-16 inset-x-0 z-40 px-gutter pb-2 pointer-events-none">
+<div class="pointer-events-auto max-w-md mx-auto relative rounded-xl overflow-hidden bg-surface-container-lowest/80 backdrop-blur-2xl shadow-[0_12px_40px_rgba(0,0,0,0.85)] border-t border-white/10 active:scale-[0.99] transition-transform">
+<!-- Scrubbing Bar Line at top with scarlet neon progress -->
+<div class="w-full h-1 bg-surface-container-highest relative overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container w-[58%] relative shadow-[0_0_8px_rgba(255,85,69,0.8)]">
+<div class="absolute right-0 top-0 bottom-0 w-1 bg-white"></div>
+</div>
+</div>
+<div class="p-2.5 flex items-center justify-between gap-space-sm">
+<!-- Track Media Preview + Stream info -->
+<div class="flex items-center gap-space-sm min-w-0 flex-1 cursor-pointer">
+<div class="relative w-10 h-10 rounded-md overflow-hidden shrink-0 shadow-sm shadow-black/80">
+<img class="w-full h-full object-cover" data-alt="Album artwork of After Dark by Mr.Kitty, dark gothic silhouette with stark scarlet red and obsidian contrast, haunting synth pop portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAecI6TSWMRmbcOhkiALTF5dzeHzLlNruFDq_9EmZy4JOl_cYAhxvb4dsimDwDKbZvbgRJfkZpEmL2rgCBjk5cFbCHaPmP_pH8EOVlzGOg5XOZTXRyv7owmQwtltBf1ram97-ldMA_imp9ce3Ga_Isping8J5BaO251uUIcJVCdSsMM6z_q1_K1jExjjAQF_2uZjxEHhLIvqfqNbVTiFcy5tdRrQ-D0dksu_j_Ezx2t6MWsIcEan71"/>
+<!-- Pulsing audio equalizer indicator -->
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center gap-0.5 px-2">
+<span class="w-0.5 h-3 bg-primary rounded-full animate-pulse"></span>
+<span class="w-0.5 h-4 bg-primary rounded-full animate-pulse delay-75"></span>
+<span class="w-0.5 h-2 bg-primary rounded-full animate-pulse delay-150"></span>
+</div>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-on-surface text-[14px] leading-tight truncate">After Dark</span>
+<span class="text-[10px] font-bold px-1 rounded bg-secondary-container/20 text-secondary-fixed shrink-0">FLAC</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-sm text-body-sm text-[12px] truncate">
+<span class="truncate">Mr.Kitty</span>
+<span>•</span>
+<span class="flex items-center gap-0.5 text-secondary-fixed-dim text-[11px] truncate">
+<span class="material-symbols-outlined text-[12px]">dns</span>
+                Navidrome
+              </span>
+</div>
+</div>
+</div>
+<!-- Mini-Player Controls -->
+<div class="flex items-center gap-1 shrink-0">
+<!-- Cast output destination indicator button -->
+<button aria-label="Prehrávané zariadenie" class="w-9 h-9 flex items-center justify-center rounded-full text-secondary-fixed hover:bg-surface-container-high transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">cast_connected</span>
+</button>
+<!-- Play / Pause primary button -->
+<button aria-label="Prehrať alebo Pozastaviť" class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-[0_0_12px_rgba(255,85,69,0.4)] hover:brightness-110 active:scale-90 transition-transform" id="miniPlayerPlayToggle">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">pause</span>
+</button>
+<!-- Next Track button -->
+<button aria-label="Nasledujúca skladba" class="w-9 h-9 flex items-center justify-center rounded-full text-on-surface hover:text-primary transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[22px]">skip_next</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Filter chips active state toggling
+  document.querySelectorAll('.filter-chip').forEach(button => {
+    button.addEventListener('click', () => {
+      document.querySelectorAll('.filter-chip').forEach(b => {
+        b.classList.remove('bg-primary-container', 'text-on-primary-container', 'shadow-[0_0_16px_rgba(255,85,69,0.35)]');
+        b.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+      });
+      button.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+      button.classList.add('bg-primary-container', 'text-on-primary-container', 'shadow-[0_0_16px_rgba(255,85,69,0.35)]');
+    });
+  });
+
+  // Mini player play/pause toggle micro-interaction
+  const playToggle = document.getElementById('miniPlayerPlayToggle');
+  if (playToggle) {
+    let isPlaying = true;
+    playToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isPlaying = !isPlaying;
+      const icon = playToggle.querySelector('.material-symbols-outlined');
+      if (icon) {
+        icon.textContent = isPlaying ? 'pause' : 'play_arrow';
+      }
+      playToggle.classList.toggle('bg-primary-container', isPlaying);
+      playToggle.classList.toggle('bg-white', !isPlaying);
+      playToggle.classList.toggle('text-black', !isPlaying);
+    });
+  }
+
+  // Grid/List toggle placeholder micro-action
+  const viewToggleBtn = document.getElementById('viewToggleBtn');
+  if (viewToggleBtn) {
+    let isGrid = false;
+    viewToggleBtn.addEventListener('click', () => {
+      isGrid = !isGrid;
+      const icon = viewToggleBtn.querySelector('.material-symbols-outlined');
+      if (icon) {
+        icon.textContent = isGrid ? 'format_list_bulleted' : 'grid_view';
+      }
+    });
+  }
+</script></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.6)]" data-active-classes="text-primary font-bold"><div class="flex items-center justify-around h-16 px-space-sm"><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] text-on-surface-variant hover:text-on-surface transition-colors" data-path="home-quick-picks-stream" href="#"><span class="material-symbols-outlined text-[24px]">home</span><span class="font-label-sm text-label-sm mt-0.5">Home</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] text-on-surface-variant hover:text-on-surface transition-colors" data-path="explore" href="#"><span class="material-symbols-outlined text-[24px]">explore</span><span class="font-label-sm text-label-sm mt-0.5">Explore</span></a><a aria-current="page" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] transition-colors text-primary font-bold" data-path="library" href="#"><span class="material-symbols-outlined text-[24px]">library_music</span><span class="font-label-sm text-label-sm mt-0.5">Library</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] text-on-surface-variant hover:text-on-surface transition-colors" data-path="upgrade" href="#"><span class="material-symbols-outlined text-[24px]">workspace_premium</span><span class="font-label-sm text-label-sm mt-0.5">Upgrade</span></a></div></nav></body></html>

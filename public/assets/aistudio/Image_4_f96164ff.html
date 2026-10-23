@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-container-high": "#2a2a2a", "on-secondary-container": "#00686f", "secondary-fixed-dim": "#00dbe9", "surface-container": "#201f1f", "primary-fixed-dim": "#ffb4a9", "surface-container-low": "#1c1b1b", "on-tertiary-fixed": "#2c0051", "on-tertiary-fixed-variant": "#6900b3", "surface-tint": "#ffb4a9", "on-primary-container": "#5c0002", "on-surface-variant": "#eabcb5", "on-surface": "#e5e2e1", "tertiary-fixed-dim": "#ddb7ff", "on-error": "#690005", "error": "#ffb4ab", "on-primary-fixed-variant": "#930005", "surface-variant": "#353534", "surface": "#131313", "surface-container-highest": "#353534", "on-background": "#e5e2e1", "outline": "#b08781", "primary-fixed": "#ffdad5", "secondary-container": "#00eefc", "secondary": "#d3fbff", "on-error-container": "#ffdad6", "primary-container": "#ff5545", "background": "#131313", "on-primary": "#690002", "outline-variant": "#5f3e3a", "tertiary": "#ddb7ff", "on-primary-fixed": "#410001", "on-secondary-fixed": "#002022", "surface-bright": "#393939", "surface-container-lowest": "#0e0e0e", "on-tertiary-container": "#400071", "inverse-primary": "#c00009", "primary": "#ffb4a9", "secondary-fixed": "#7df4ff", "tertiary-container": "#b76dff", "on-secondary-fixed-variant": "#004f54", "on-tertiary": "#490080", "inverse-surface": "#e5e2e1", "surface-dim": "#131313", "on-secondary": "#00363a", "tertiary-fixed": "#f0dbff", "inverse-on-surface": "#313030", "error-container": "#93000a" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter": "1rem", "space-md": "1rem", "margin-desktop": "2.5rem", "margin-tablet": "1.5rem", "space-lg": "1.5rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "space-xl": "2rem", "gutter-sm": "0.75rem", "margin": "1rem" }, "fontFamily": { "body-lg": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"] }, "fontSize": { "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-xl-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "headline-md": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "label-sm": ["10px", { "lineHeight": "12px", "letterSpacing": "0.05em", "fontWeight": "700" }], "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }], "label-lg": ["14px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "600" }], "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "800" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-sm": ["16px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "600" }], "headline-lg-mobile": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "700" }] } } } }</script><style>@layer base { html, body { width: 100%; margin: 0; padding: 0; background-color: #131313; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } } ::-webkit-scrollbar { display: none; }</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface text-on-surface font-body-md text-body-md min-h-screen flex flex-col selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 inset-x-0 z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.4)]"><div class="h-16 px-gutter flex items-center justify-between"><div class="flex items-center gap-space-sm"><button class="w-11 h-11 -ml-space-xs flex items-center justify-center rounded-full text-on-surface hover:text-primary transition-colors active:scale-95" onclick="history.back()"><span class="material-symbols-outlined text-[24px]">arrow_back</span></button><img alt="SoundWave Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XNbJU8Bha_PoiUwOZeH1JHNTJyMGvtEGBT8Zk0fwYou9udUULl9u7BSZHEm48k2Hr9r9pBhEQlnq4BHbaXSGx_s2eNT8brkl6gBiFr9XsnXv2sFLYDwIT65KI06sl-DuIHczyPGpQtLNvOKnUHlQYFcdUoH6WgKeaDFqfUNPHQgkCG71_fcQwxHqi1GtwWTNP20eBS_QPJIlUSowtqpNuRGviC_3mzrOBC6UodihHvP0xTC9ZrCKcE80A"/><h1 class="font-headline-sm text-headline-sm tracking-tight text-on-surface truncate">Now Playing</h1></div><div class="flex items-center gap-space-xs"><button class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface hover:text-primary transition-colors active:scale-95"><span class="material-symbols-outlined text-[24px]">more_vert</span></button><div class="w-11 h-11 flex items-center justify-center pl-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJbRXDLCgliMAa42OjzEx7JNhbXFpEOifUxVb7uKaXETuWAT6cOCjIG4ctvJTGrHglfS4kCJiqvn_R8aeEVO91I-IRPnKCKyZk0VtKEWojOFiB2sw4ykQmWoHfukCeSmfDX__S9KHac9lFsTBUW1djAMY90G9sya6LgS3USaKoHUB7UQhagpY1hUAnS2fPbaA4tyRv6WtJGa9nZOWq-y6p-0tmIGzdeHezp8-6pPG9_1pbI0uII6RI"/></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 bg-surface pb-safe"><div class="flex flex-col w-full pb-28 text-on-surface">
+<!-- Top Utility Bar inside Content (Seamless with nocturnal theme) -->
+<div class="flex items-center justify-between px-gutter py-space-sm bg-surface-container-lowest/80 backdrop-blur-md">
+<div class="flex items-center gap-space-xs text-secondary-fixed">
+<span class="inline-block w-2 h-2 rounded-full bg-secondary-fixed-dim animate-pulse"></span>
+<span class="font-label-sm text-label-sm tracking-wider uppercase">music.homebox (Subsonic v1.16)</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button aria-label="Cast to device" class="w-9 h-9 flex items-center justify-center rounded-full text-on-surface hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[20px]">cast</span>
+</button>
+<button aria-label="Search artist tracks" class="w-9 h-9 flex items-center justify-center rounded-full text-on-surface hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</button>
+<button aria-label="Server options" class="w-9 h-9 flex items-center justify-center rounded-full text-on-surface hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+</button>
+</div>
+</div>
+<!-- Hero Section: Synthwave Visual Backdrop -->
+<section class="relative w-full overflow-hidden px-gutter pt-space-md">
+<!-- Atmospheric Ambient Glows -->
+<div class="absolute -top-12 -left-12 w-64 h-64 rounded-full bg-primary-container/20 blur-3xl pointer-events-none"></div>
+<div class="absolute top-1/3 -right-12 w-72 h-72 rounded-full bg-secondary-container/15 blur-3xl pointer-events-none"></div>
+<div class="relative rounded-2xl overflow-hidden shadow-2xl bg-surface-container-low">
+<!-- Image with Synthetic Scrim -->
+<div class="relative w-full h-72 sm:h-80 bg-cover bg-center" data-alt="Dynamic portrait of synthwave band The Midnight with Tyler Lyle and Tim McEwan bathed in neon magenta, deep crimson, and cyan backlights with vintage analog synthesizers, tape reels, and smoky nocturnal city haze in retro aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBMzGxGpXoPP02nkK_8IsJRdFq1NwhuPR2tQQR0EIobddN2b7bl3lF0KnFlhv4RXc5BHTYYbgE0a6UU_jgmRkl14XPp2GIkU7TIHTR3J44MW6gOBanU-AgNw1LUVfsXu75ky2fcc56xOD9M46EDE2d4KC0DJ19c09NHZO16mf06dPGKo7i-XzCmI3ZIgerg4HikIuCnC0D7XowafK2wmn3-H5YFJ_neNagEvUI9tGkKjGNenCe0hIvL')">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/60 to-transparent"></div>
+<!-- Hi-Res Audiofile Badge -->
+<div class="absolute top-space-md left-space-md flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-lowest/80 backdrop-blur-md shadow-md">
+<span class="material-symbols-outlined text-secondary-fixed text-[16px]" style="font-variation-settings: 'FILL' 1;">graphic_eq</span>
+<span class="font-label-sm text-label-sm text-secondary-fixed uppercase tracking-wider font-bold">FLAC Studio Master</span>
+</div>
+<!-- Sync Pill Tag -->
+<div class="absolute top-space-md right-space-md flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-lowest/80 backdrop-blur-md">
+<span class="material-symbols-outlined text-primary text-[14px]">cloud_done</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Navidrome Synced</span>
+</div>
+<!-- Hero Content Overlay -->
+<div class="absolute bottom-0 inset-x-0 p-space-md flex flex-col gap-1.5">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm uppercase font-bold tracking-wider">Top Artist</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Los Angeles, USA</span>
+</div>
+<h1 class="font-headline-xl-mobile text-headline-xl-mobile text-on-surface font-extrabold tracking-tight drop-shadow-md">The Midnight</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Synthwave / Retrowave • Tim McEwan &amp; Tyler Lyle</p>
+</div>
+</div>
+<!-- Server Stats Bar (Navidrome Telemetry) -->
+<div class="px-space-md py-2.5 bg-surface-container-high/90 backdrop-blur-md flex items-center justify-between text-on-surface-variant">
+<div class="flex items-center gap-space-sm font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px] text-secondary-fixed-dim">folder_special</span>
+<span><strong class="text-on-surface">24</strong> albumov</span>
+<span class="text-outline-variant">•</span>
+<span><strong class="text-on-surface">186</strong> skladieb</span>
+</div>
+<div class="flex items-center gap-1 text-secondary-fixed font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+<span>100% FLAC</span>
+</div>
+</div>
+</div>
+<!-- Quick Action Bar -->
+<div class="mt-space-md flex flex-wrap items-center gap-space-sm">
+<!-- Primary Play Pill -->
+<button class="flex-1 min-w-[150px] h-12 px-space-md bg-primary-container hover:bg-primary-container/90 text-on-primary-container rounded-full flex items-center justify-center gap-2 shadow-lg shadow-primary-container/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+<span class="font-label-lg text-label-lg font-bold">Rádio interpreta</span>
+</button>
+<!-- Secondary Shuffle -->
+<button class="h-12 px-space-md bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded-full flex items-center justify-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[20px] text-primary">shuffle</span>
+<span class="font-label-lg text-label-lg">Náhodne</span>
+</button>
+<!-- Favorite Heart -->
+<button aria-label="Pridať do obľúbených" class="w-12 h-12 bg-surface-container-high hover:bg-surface-container-highest text-primary-container rounded-full flex items-center justify-center active:scale-90 transition-all" id="favorite-btn">
+<span class="material-symbols-outlined text-[24px]" id="favorite-icon" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+<!-- Download Offline Discography Pill -->
+<button class="w-full h-11 px-space-md rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant flex items-center justify-between active:scale-[0.99] transition-all">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-secondary-fixed">download_for_offline</span>
+<span class="font-label-md text-label-md text-on-surface">Stiahnuť diskografiu offline</span>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-surface-container-highest text-secondary-fixed font-semibold">8.4 GB FLAC</span>
+</button>
+</div>
+</section>
+<!-- Horizontal Filter Chips -->
+<div class="w-full mt-space-lg overflow-x-auto no-scrollbar px-gutter flex items-center gap-space-xs">
+<button class="px-space-md h-8 rounded-full bg-on-surface text-surface font-label-md text-label-md font-bold whitespace-nowrap shadow-sm">
+      Populárne
+    </button>
+<button class="px-space-md h-8 rounded-full bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md whitespace-nowrap transition-colors">
+      Albumy (8)
+    </button>
+<button class="px-space-md h-8 rounded-full bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md whitespace-nowrap transition-colors">
+      EP a Single (12)
+    </button>
+<button class="px-space-md h-8 rounded-full bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md whitespace-nowrap transition-colors">
+      Živé vystúpenia &amp; Remixy (4)
+    </button>
+<button class="px-space-md h-8 rounded-full bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md whitespace-nowrap transition-colors">
+      Podobní interpreti
+    </button>
+</div>
+<!-- Section: Najhranejšie skladby na serveri -->
+<section class="mt-space-lg px-gutter">
+<div class="flex items-center justify-between mb-space-sm">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Najhranejšie na serveri</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Metriky prehrávania z music.homebox</p>
+</div>
+<span class="material-symbols-outlined text-primary-container text-[20px]">trending_up</span>
+</div>
+<!-- Tracklist -->
+<div class="flex flex-col gap-1">
+<!-- Track 1: Currently Active / Playing Simulation -->
+<div class="flex items-center justify-between p-2 rounded-xl bg-surface-container-high/60 hover:bg-surface-container-high active:scale-[0.99] transition-all cursor-pointer">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-6 flex items-center justify-center text-primary font-label-md text-label-md">
+<!-- Animated 3-bar equalizer -->
+<div class="flex items-end gap-0.5 h-3.5">
+<span class="w-0.5 h-3 bg-primary-container animate-pulse rounded-full"></span>
+<span class="w-0.5 h-2 bg-primary animate-ping rounded-full"></span>
+<span class="w-0.5 h-3.5 bg-secondary-fixed animate-pulse rounded-full"></span>
+</div>
+</div>
+<div class="relative w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Album artwork of Endless Summer by The Midnight with tropical sunset silhouettes, grid road, and glowing retro neon palm trees." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDppKcxbluFi2kPV9LNPzGy0B0Mcx2bB9_29hKiVrNtC-ZO6ojTzhIpaIY1MoiukXSSSVwCiBKq9vofdzWZBiILdPQuQYSOQliRFBmLjYzPrSVpY297X9SNhddwXRc6FWF4taKRJrgs0-GTNiByJ_OVf2GHB5kXAwlvWNRFKlW9rVjO4bn2dUDA5dIXplbwCD56ats3qe4U3znKVfgyDcCl4WnJX1uqdJtx1Kyil7AcLAPrM25Echib"/>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-lg text-label-lg text-primary truncate font-bold">Sunset</span>
+<div class="flex items-center gap-1.5 font-body-sm text-body-sm text-on-surface-variant">
+<span class="truncate">Endless Summer</span>
+<span>•</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-highest text-secondary-fixed text-[10px] font-bold">FLAC 24b/96k</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm pl-2 flex-shrink-0">
+<div class="text-right">
+<div class="font-label-sm text-label-sm text-on-surface-variant font-medium">452×</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">5:26</div>
+</div>
+<button aria-label="More options" class="w-8 h-8 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Track 2 -->
+<div class="flex items-center justify-between p-2 rounded-xl hover:bg-surface-container active:scale-[0.99] transition-all cursor-pointer">
+<div class="flex items-center gap-space-sm min-w-0">
+<span class="w-6 text-center font-label-md text-label-md text-on-surface-variant">2</span>
+<div class="relative w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Album artwork of Days of Thunder by The Midnight showcasing a 1980s sportscar speeding towards a neon horizon." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2YPuL9_kV2h9cIS94rTpcplQHBc6Rg2XstBI1rvqrFdUXHH6gbg6UNnR_bAunNmCTGFhd-677APeST0et2rrr3sAAWh_KjqKQ4K0A4ZwOAHbFDstd2vIMa54GBGJc751Km_4_mVA4EKU2CCJVhAf7qzWqwoYHePAFIs5GUkxt7FgOgPKkg8cOJEpF2H6EOvAAqPZbnd403PZBOBxW-lxg0MQ5g3BWetdeTeCcjXcxRjpOBg1Crm2g"/>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-lg text-label-lg text-on-surface truncate font-semibold">Days of Thunder</span>
+<div class="flex items-center gap-1.5 font-body-sm text-body-sm text-on-surface-variant">
+<span class="truncate">Days of Thunder</span>
+<span>•</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-highest text-secondary-fixed text-[10px] font-bold">FLAC 24b</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm pl-2 flex-shrink-0">
+<div class="text-right">
+<div class="font-label-sm text-label-sm text-on-surface-variant font-medium">389×</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">5:19</div>
+</div>
+<button aria-label="More options" class="w-8 h-8 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Track 3 -->
+<div class="flex items-center justify-between p-2 rounded-xl hover:bg-surface-container active:scale-[0.99] transition-all cursor-pointer">
+<div class="flex items-center gap-space-sm min-w-0">
+<span class="w-6 text-center font-label-md text-label-md text-on-surface-variant">3</span>
+<div class="relative w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Cover art of Days of Thunder featuring retro chrome typography and neon sunset purple gradients." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDE2tBLQJunHOvGk1b4uYHejzsggLouAN8U39qsH0cE13i70Kvy88HiomNeL9zBpHa-ANCn7xpRVZ0iI181EN2-IlFnpJjLuog9i5_9Gb5YFDcYSBO8wtQFccPFtuNAG2vyQof1Z0-jT5z1RFFCKTtLPx5m_vF7JAZ216ZqFjY1Twm-rxX_F9GdpjoNRWh_Q0DXuczffhbm74AsvugqxnPM26zEoV6050S8uHl9MRshwZwXS3eJ1rDo"/>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-lg text-label-lg text-on-surface truncate font-semibold">Los Angeles</span>
+<div class="flex items-center gap-1.5 font-body-sm text-body-sm text-on-surface-variant">
+<span class="truncate">Days of Thunder</span>
+<span>•</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-highest text-outline text-[10px] font-bold">FLAC 16b</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm pl-2 flex-shrink-0">
+<div class="text-right">
+<div class="font-label-sm text-label-sm text-on-surface-variant font-medium">312×</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">6:30</div>
+</div>
+<button aria-label="More options" class="w-8 h-8 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Track 4 -->
+<div class="flex items-center justify-between p-2 rounded-xl hover:bg-surface-container active:scale-[0.99] transition-all cursor-pointer">
+<div class="flex items-center gap-space-sm min-w-0">
+<span class="w-6 text-center font-label-md text-label-md text-on-surface-variant">4</span>
+<div class="relative w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Album art featuring nostalgic cassette tape elements and synthwave gradients from Endless Summer Deluxe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTStcxccFiFwyVkyJtGE2tSzMgEsbsxFstnaIptzsbhNTjwhNMrnth8p_TlLO_2KmDt9NjIQB2QOeEBPja48hGZqA5xrpvCjw9aS6e4xioMx4Jsqk7_8Np0O_4pkUpf-l2q7xVi1sSG2qbNzn3EEVy2MKGegxEwWPyuiNLNoBBeR_0VEHEEhMuGTFYCiOk5JKOqP3JU02bK54Ld81bnY_zPBUEedufxvi7TYxdprba4VopzoeUQrRd"/>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-lg text-label-lg text-on-surface truncate font-semibold">Jason (feat. Nikki Flores)</span>
+<div class="flex items-center gap-1.5 font-body-sm text-body-sm text-on-surface-variant">
+<span class="truncate">Endless Summer</span>
+<span>•</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-highest text-outline text-[10px] font-bold">FLAC 16b</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm pl-2 flex-shrink-0">
+<div class="text-right">
+<div class="font-label-sm text-label-sm text-on-surface-variant font-medium">298×</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">5:31</div>
+</div>
+<button aria-label="More options" class="w-8 h-8 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Track 5 -->
+<div class="flex items-center justify-between p-2 rounded-xl hover:bg-surface-container active:scale-[0.99] transition-all cursor-pointer">
+<div class="flex items-center gap-space-sm min-w-0">
+<span class="w-6 text-center font-label-md text-label-md text-on-surface-variant">5</span>
+<div class="relative w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Atmospheric neon saxophone and city skyline art for Vampires by The Midnight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFJ2SfPGpNCWySuGMavs7_Q9rrwKL2Qe3gRa9GquqSy9bJF5nsjr2gOU5yByj3toCDX7eML89XTF4fLtKGaWTlP07YLy7EHOU6A0hOaJ-pcCyg1dZBWCOO-yd4N_LI3_SJgqVppZQurlbJSqUzsbJg7Yx05IKRHGylODiFdXdMpROA3CrXXnexS230WbH9e8xoWITN5LrxO4MiqnqQfyP_k6ceDINW6VTwnJ4WOsqIsdXRM1e8arQG"/>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-lg text-label-lg text-on-surface truncate font-semibold">Vampires</span>
+<div class="flex items-center gap-1.5 font-body-sm text-body-sm text-on-surface-variant">
+<span class="truncate">Endless Summer</span>
+<span>•</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-highest text-secondary-fixed text-[10px] font-bold">FLAC 24b/48k</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm pl-2 flex-shrink-0">
+<div class="text-right">
+<div class="font-label-sm text-label-sm text-on-surface-variant font-medium">264×</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">5:17</div>
+</div>
+<button aria-label="More options" class="w-8 h-8 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- View All 20 button -->
+<button class="w-full mt-2 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md text-center active:scale-[0.99] transition-all flex items-center justify-center gap-1.5">
+<span>Zobraziť všetkých 20 najhranejších</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+</section>
+<!-- Section: Štúdiové albumy na Navidrome (Grid) -->
+<section class="mt-space-lg px-gutter">
+<div class="flex items-center justify-between mb-space-sm">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Štúdiové albumy</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">8 kompletných master vydaní na úložisku</p>
+</div>
+<button class="font-label-md text-label-md text-primary font-semibold flex items-center gap-0.5">
+        Všetko <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+<!-- Album Cards Grid (2 columns on mobile) -->
+<div class="grid grid-cols-2 gap-space-sm">
+<!-- Album 1: Endless Summer -->
+<div class="flex flex-col gap-2 p-2.5 rounded-2xl bg-surface-container-low hover:bg-surface-container transition-all group cursor-pointer">
+<div class="relative w-full aspect-square rounded-xl overflow-hidden bg-surface-container-highest shadow-md">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Album cover for Endless Summer Deluxe Edition by The Midnight showing pink wireframe neon grid sun over ocean waters." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfLlbCaNqddqieUB4dwppjkbw1hqUDGixH72kDxCPXULliIExi_CQvPca60q1yr3iaZ1mBSmYlhQlaOdPPCOLPTUc-hXAOjk0Y6FqAchIdSrVrDxpK7AXnKJ-fYD2LOqJzLF0jK82FWb5LBQ2Ee31c8mUkBhZkZ7daPuGKra7dnFtlokJuJ4B4daoznxGZnoU1l_9kQLcDJmQ8AI8tdrffxk64iqK5lK6qH3ZIQXcnjL9sny7INlSJ"/>
+<div class="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-md text-secondary-fixed font-label-sm text-label-sm font-bold uppercase tracking-wider">
+            FLAC 24/48
+          </div>
+<div class="absolute bottom-2 right-2 w-7 h-7 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">download_done</span>
+</div>
+</div>
+<div class="flex flex-col">
+<h3 class="font-label-lg text-label-lg text-on-surface font-bold line-clamp-1 group-hover:text-primary transition-colors">Endless Summer (Deluxe)</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">2016 • 16 skladieb</p>
+<span class="mt-1 font-label-sm text-label-sm text-secondary-fixed-dim">Offline pripravené (1.1 GB)</span>
+</div>
+</div>
+<!-- Album 2: Monsters -->
+<div class="flex flex-col gap-2 p-2.5 rounded-2xl bg-surface-container-low hover:bg-surface-container transition-all group cursor-pointer">
+<div class="relative w-full aspect-square rounded-xl overflow-hidden bg-surface-container-highest shadow-md">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Album art for Monsters by The Midnight featuring late 90s bedroom aesthetics, teenage posters, CRT monitors, and nostalgic violet mood lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBW8NBNjWsm0y-C6SBFfnBRXPxyY3RkQ1SctM7wv0bElDzXnw2NM0rDNow5fg16zWS_8sSho9HTB6o8FHkQRZF1zodpn0sL6okL_es0gX3embq9CKphDJmq3HE69QjR2WmTEbiRJz8SuzaoM6yjurBtNfv7_EE6SuskMNUyBd3cNYDigKBOsp7hKM5QELmflm0yC_8LvCFMt0OHkWv2g4NOcJEAwJtgXTiFfS-wH4fiLwM5ZKtQCgZ"/>
+<div class="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-md text-secondary-fixed font-label-sm text-label-sm font-bold uppercase tracking-wider">
+            FLAC 24/96
+          </div>
+</div>
+<div class="flex flex-col">
+<h3 class="font-label-lg text-label-lg text-on-surface font-bold line-clamp-1 group-hover:text-primary transition-colors">Monsters</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">2020 • 15 skladieb</p>
+<span class="mt-1 font-label-sm text-label-sm text-on-surface-variant">Stream z domáceho NAS</span>
+</div>
+</div>
+<!-- Album 3: Heroes -->
+<div class="flex flex-col gap-2 p-2.5 rounded-2xl bg-surface-container-low hover:bg-surface-container transition-all group cursor-pointer">
+<div class="relative w-full aspect-square rounded-xl overflow-hidden bg-surface-container-highest shadow-md">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Cover artwork for Heroes by The Midnight showing stadium rock synthwave aesthetic with bold electric red and deep cosmic navy hues." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDylz0fUt3hVnbPhfJ3On5m9jFvePPbIGmQj_OAYlEIGBt7RGxPUZajEHCv4bsFtU42VNu6qldU6PFcR3qlIuUjJo6Ji_VAvFQi8SNL799dUu-ckUUlD2UnpLng_KjiXXYg8F3PT4oQImtjjRwDkJC0zc10utY9f3f-RbRYln3fCEheL7M42ROtvOuX5SNjyaBoGiFu9Ge8BS_brgTfP5O7Np_yRCj3h_UxFs61F10SdR4o8Wpgi9Sr"/>
+<div class="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-md text-secondary-fixed font-label-sm text-label-sm font-bold uppercase tracking-wider">
+            FLAC 24-bit
+          </div>
+</div>
+<div class="flex flex-col">
+<h3 class="font-label-lg text-label-lg text-on-surface font-bold line-clamp-1 group-hover:text-primary transition-colors">Heroes</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">2022 • 13 skladieb</p>
+<span class="mt-1 font-label-sm text-label-sm text-on-surface-variant">Stream z domáceho NAS</span>
+</div>
+</div>
+<!-- Album 4: Kids -->
+<div class="flex flex-col gap-2 p-2.5 rounded-2xl bg-surface-container-low hover:bg-surface-container transition-all group cursor-pointer">
+<div class="relative w-full aspect-square rounded-xl overflow-hidden bg-surface-container-highest shadow-md">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Nostalgic retro cover for album Kids by The Midnight, featuring 1980s VHS textures, retro handheld consoles, and suburban dreamscape." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0JVtxcGDNX2rZeg_C1PBY1DdXJ4k4tXn-OqH5G9Ly5tYjkdG4bluq2VdmnuRAdHlh83mLYinPNfYVjUnKag-irgmnaiGY6Hm7CknQidfoevt6xQLUTVaR44l-VlDbyikTJ5idwTgRoxbluXI9dOQsJVm8-OXUkaZQ2bxhPJl6gDmJfUqGwOY2236k0QgRqOoZZ55h6II6gS5fwNIURo4PsUgdYhuhNjwFCfIg6OrsIzSac78k2tdA"/>
+<div class="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-md text-outline font-label-sm text-label-sm font-bold uppercase tracking-wider">
+            FLAC 16-bit
+          </div>
+</div>
+<div class="flex flex-col">
+<h3 class="font-label-lg text-label-lg text-on-surface font-bold line-clamp-1 group-hover:text-primary transition-colors">Kids</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">2018 • 9 skladieb</p>
+<span class="mt-1 font-label-sm text-label-sm text-on-surface-variant">Stream z domáceho NAS</span>
+</div>
+</div>
+<!-- Album 5: Nocturnal -->
+<div class="flex flex-col gap-2 p-2.5 rounded-2xl bg-surface-container-low hover:bg-surface-container transition-all group cursor-pointer col-span-2 sm:col-span-1">
+<div class="flex items-center gap-space-md">
+<div class="relative w-20 h-20 rounded-xl overflow-hidden bg-surface-container-highest flex-shrink-0 shadow-md">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Album art of Nocturnal by The Midnight with brooding neon noir aesthetic, rain-soaked asphalt and neon diner reflections." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZpY2gAAvR-FGmrGclRs_7EVPkFLWsfnA1Ns1EvGgAOZd_mrnagPBm96US9Kn_48m0xKVgQjC4nrU_c_MQ4K7ReofCvllMGbtgAXcWaQBgnjVN_nMft9F1Ehzv2qKk9tc7LQyh7tgk_ifK9NZddsO7U6d_1anh-PqaQLUhmRGbLmUSlgxFkFXXxRU7-Cx5xhi1kZTgF_1eezd3kP6hgvUf3ouKhwKBXKYJTSlktslQiKLbA7tlOmLv"/>
+<div class="absolute top-1 left-1 px-1 py-0.2 rounded bg-surface-container-lowest/90 backdrop-blur-md text-secondary-fixed text-[9px] font-bold">
+              24/44.1
+            </div>
+</div>
+<div class="flex flex-col min-w-0">
+<h3 class="font-label-lg text-label-lg text-on-surface font-bold truncate group-hover:text-primary transition-colors">Nocturnal</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">2017 • 7 skladieb • Synthwave Noir</p>
+<span class="font-label-sm text-label-sm text-secondary-fixed font-semibold">Lossless Audiofile Master</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: EP, Single & Remixy (Horizontal Carousel) -->
+<section class="mt-space-lg">
+<div class="px-gutter flex items-center justify-between mb-space-sm">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">EP, Single &amp; Remixy</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Rarity a špeciálne verzie na serveri</p>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant">12 položiek</span>
+</div>
+<!-- Carousel Track -->
+<div class="w-full overflow-x-auto no-scrollbar px-gutter flex gap-space-sm">
+<!-- Single 1 -->
+<div class="flex-shrink-0 w-36 flex flex-col gap-1.5 group cursor-pointer">
+<div class="relative w-36 h-36 rounded-xl overflow-hidden bg-surface-container-highest shadow-md">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" data-alt="Single artwork for Chariot by The Midnight featuring glowing red sports car headlights on an empty desert highway at dusk." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIhZ0uglQFQoFqJXnpC-WXHgaAH3C6h5Lj5Eldqlbm4U9OMK1Ju9k8fKjdXWRRGoVy6kWw_YhOJTrffnXvx3EA0fGvQ1y-dk9oGpRLBI9m2GaOIVMKIACZuS7sOJyXXGGTt4JCxKN8I-nMwgfXfYW5cUeij9Ox6tOCXeHgVMld8W8VsIgT7qYEKh-RVQYim-JWlNmffaJ_nor7ZErsQ7xur7eMpV7BOYzJK8dlgpGyN09-K4u7Og7g"/>
+<span class="absolute bottom-2 left-2 px-1.5 py-0.5 rounded bg-surface-container-lowest/80 text-[10px] text-secondary-fixed font-bold">FLAC 24b</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-bold truncate group-hover:text-primary transition-colors">Chariot</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant -mt-1">Single 2024</span>
+</div>
+<!-- Single 2 -->
+<div class="flex-shrink-0 w-36 flex flex-col gap-1.5 group cursor-pointer">
+<div class="relative w-36 h-36 rounded-xl overflow-hidden bg-surface-container-highest shadow-md">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" data-alt="Instrumental edition cover of Days of Thunder showing minimal wireframe synthesizers and typography in cyan and neon pink." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKnOYxQFYp_vW_Dh9XHChCvJ43-PSYPoe3mSjA__k7bA5waZVu09UIv3o1Oo410_cQWjyLWqytAogkSWGcSsyeVsYlMGhDMKzr1aoqHnLZ8z5HeerfoStkO9sCK5mV4dl_edAB4Xz5cuDBouCDvlcrLPP9ZrrlNBIINCwj67N_l8VIzrregM_8L5q8yacinNEYcHsEsELjbG-7-SlKrxlfNn3ivCRT7K9bxo70S2IYETDpEn6oWWla"/>
+<span class="absolute bottom-2 left-2 px-1.5 py-0.5 rounded bg-surface-container-lowest/80 text-[10px] text-outline font-bold">Instrumental</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-bold truncate group-hover:text-primary transition-colors">Days of Thunder (Inst.)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant -mt-1">EP 2014 • 6 tracks</span>
+</div>
+<!-- Single 3 -->
+<div class="flex-shrink-0 w-36 flex flex-col gap-1.5 group cursor-pointer">
+<div class="relative w-36 h-36 rounded-xl overflow-hidden bg-surface-container-highest shadow-md">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" data-alt="EP cover for The Rearview Mirror remixes with holographic typography and dark ambient city gradients." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGUyhrbOKA20vZYO06ZJbpTV9CFuJ8W3T5Bd0QW3slJhbTQuQX_9NYnYSOXlmgHsDWnxNg2HtcFrlNdAo3No4ZoSr9Qd4wnZgFpQauUt68PQskk_r_Fn5s3crdX_5SjWV-vgKux8C1VcZNitWukvP0Xf4m1L_Oj_iboOmYxHmYpREa4fn60PXhouQMI3dHcgXh5JoNG9pFa5WM_vBZflguiJZZa0cCmJptT8t68KyokRqaToPfAdtl"/>
+<span class="absolute bottom-2 left-2 px-1.5 py-0.5 rounded bg-surface-container-lowest/80 text-[10px] text-secondary-fixed font-bold">Remix EP</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-bold truncate group-hover:text-primary transition-colors">The Rearview Mirror</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant -mt-1">Remix EP 2021</span>
+</div>
+<!-- Single 4 -->
+<div class="flex-shrink-0 w-36 flex flex-col gap-1.5 group cursor-pointer">
+<div class="relative w-36 h-36 rounded-xl overflow-hidden bg-surface-container-highest shadow-md">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" data-alt="Live concert album art for The Midnight Live in London with neon stage lighting and excited festival crowd." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDizmnvCGyjBbMyN6WhNQsoi-LHfnrSwuxnEGG4zS3r8bR2GepHj3bzul8GRKfgJdujPr9-RVW8LluewCZahBuH90XRwAZ1630Pb7PvWYw0_scXAEitBsTHK6j8Keqi4iGkD0O84zjlQ1z-Z8GvrKB24BLrRPpe-Xs5_FtpC1OzFpiEYSgWl-ocpWBEdjvKdTjDz65tqNMho4dxTV9rakZQjCUQc0Bf-kZ8vAvF42vkDzkeRl-cQxvz"/>
+<span class="absolute bottom-2 left-2 px-1.5 py-0.5 rounded bg-surface-container-lowest/80 text-[10px] text-primary font-bold">Live Session</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-bold truncate group-hover:text-primary transition-colors">Live at Roundhouse</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant -mt-1">Live 2023</span>
+</div>
+</div>
+</section>
+<!-- Section: Informácie o interpretovi & Server metadata -->
+<section class="mt-space-xl px-gutter">
+<div class="p-space-md rounded-2xl bg-surface-container-low flex flex-col gap-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">info</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">O interpretovi</h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+<strong>The Midnight</strong> je synthwave/retrowave duo zložené zo speváka a skladateľa Tylera Lylea z Atlanty a dánskeho producenta Tima McEwana z Los Angeles. Projekt vznikol v roku 2014 a spája melancholické texty, saxofónové sóla a mohutné analógové basové linky.
+      </p>
+<!-- Technical Server Telemetry Panel -->
+<div class="mt-2 pt-space-sm bg-surface-container-lowest/70 p-3 rounded-xl flex flex-col gap-1.5 font-label-sm text-label-sm text-on-surface-variant">
+<div class="flex items-center justify-between text-secondary-fixed">
+<span class="flex items-center gap-1 font-semibold uppercase">
+<span class="material-symbols-outlined text-[14px]">dns</span> Navidrome Server Tag
+          </span>
+<span class="px-1.5 py-0.2 rounded bg-surface-container font-mono text-[10px]">music.homebox</span>
+</div>
+<div class="flex justify-between py-0.5">
+<span class="text-on-surface-variant">Subsonic Artist ID:</span>
+<span class="font-mono text-on-surface">#art-409</span>
+</div>
+<div class="flex justify-between py-0.5">
+<span class="text-on-surface-variant">Umiestnenie na disku:</span>
+<span class="font-mono text-on-surface truncate max-w-[210px]">/mnt/storage/music/The Midnight/</span>
+</div>
+<div class="flex justify-between py-0.5">
+<span class="text-on-surface-variant">MusicBrainz MBID:</span>
+<span class="font-mono text-secondary-fixed-dim">d8b67f34-3151-4034...</span>
+</div>
+<div class="flex justify-between py-0.5">
+<span class="text-on-surface-variant">Posledná synchronizácia:</span>
+<span class="text-on-surface">Dnes, 03:15 (Auto-Scan OK)</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Sticky Glassmorphism Mini-Player Dock (Pinned right above Safe Bottom) -->
+<aside class="fixed bottom-0 inset-x-0 z-40 px-gutter pb-safe pt-2">
+<div class="mb-2 relative overflow-hidden rounded-2xl bg-surface-container/85 backdrop-blur-2xl shadow-[0_12px_40px_rgba(0,0,0,0.85)] p-2.5">
+<!-- Track Scrubbing Line on Top of Dock -->
+<div class="absolute top-0 inset-x-0 h-[2px] bg-surface-container-highest">
+<div class="h-full w-2/5 bg-primary-container"></div>
+</div>
+<div class="flex items-center justify-between gap-space-sm pt-0.5">
+<!-- Artwork & Meta -->
+<div class="flex items-center gap-space-sm min-w-0 flex-1 cursor-pointer">
+<div class="relative w-11 h-11 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container-highest shadow-md">
+<img class="w-full h-full object-cover" data-alt="Album art for After Dark by Mr.Kitty featuring dark atmospheric cyberwave silhouettes and deep indigo hues." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvmycCbgfjwgkeyhi_75msnilcVFRFTd9qEqbDsxc9tUhleFxQ8ONAjwhEM4xHHI8pYc-AN9KvQWJylc-c66trj95VWUqRq3Qv9Og_XMNhfuB-nVzxWzAlWU4gu3nvnzgAPJnb5ZovYcbX__8i5tu-7PTsynI0EGgWU_cIVeQ9aZHMrrUBH-Fb8WIhy128D_ekRDLk-I-WiFCxImI9QFIOPa0Lx-hUtzK1OnOhGH8744oQOkb_vHun"/>
+<span class="absolute bottom-0 inset-x-0 text-center bg-primary-container/90 text-[8px] font-bold text-on-primary-container uppercase">24-BIT</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-label-lg text-label-lg text-on-surface font-bold truncate">After Dark</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-highest text-secondary-fixed text-[9px] font-bold">FLAC</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Mr.Kitty • Time</span>
+</div>
+</div>
+<!-- Controls -->
+<div class="flex items-center gap-1 flex-shrink-0">
+<button aria-label="Like currently playing" class="w-9 h-9 flex items-center justify-center rounded-full text-on-surface-variant hover:text-primary active:scale-95 transition-all" id="like-mini-btn">
+<span class="material-symbols-outlined text-[20px]">favorite_border</span>
+</button>
+<button aria-label="Play or Pause track" class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-container text-on-primary-container active:scale-90 transition-all shadow-md shadow-primary-container/25" id="play-pause-btn">
+<span class="material-symbols-outlined text-[24px]" id="play-pause-icon" style="font-variation-settings: 'FILL' 1;">pause</span>
+</button>
+<button aria-label="Next track" class="w-9 h-9 flex items-center justify-center rounded-full text-on-surface hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[22px]">skip_next</span>
+</button>
+</div>
+</div>
+</div>
+</aside>
+</div>
+<script>
+  // Interactive micro-delights
+  const favBtn = document.getElementById('favorite-btn');
+  const favIcon = document.getElementById('favorite-icon');
+  let isFav = true;
+  if (favBtn && favIcon) {
+    favBtn.addEventListener('click', () => {
+      isFav = !isFav;
+      if (isFav) {
+        favIcon.innerText = 'favorite';
+        favIcon.style.fontVariationSettings = "'FILL' 1";
+        favBtn.classList.remove('text-on-surface-variant');
+        favBtn.classList.add('text-primary-container');
+      } else {
+        favIcon.innerText = 'favorite_border';
+        favIcon.style.fontVariationSettings = "'FILL' 0";
+        favBtn.classList.remove('text-primary-container');
+        favBtn.classList.add('text-on-surface-variant');
+      }
+    });
+  }
+
+  const playPauseBtn = document.getElementById('play-pause-btn');
+  const playPauseIcon = document.getElementById('play-pause-icon');
+  let isPlaying = true;
+  if (playPauseBtn && playPauseIcon) {
+    playPauseBtn.addEventListener('click', () => {
+      isPlaying = !isPlaying;
+      playPauseIcon.innerText = isPlaying ? 'pause' : 'play_arrow';
+    });
+  }
+
+  const likeMini = document.getElementById('like-mini-btn');
+  if (likeMini) {
+    let miniLiked = false;
+    likeMini.addEventListener('click', () => {
+      miniLiked = !miniLiked;
+      const span = likeMini.querySelector('span');
+      if (miniLiked) {
+        span.innerText = 'favorite';
+        span.style.fontVariationSettings = "'FILL' 1";
+        likeMini.classList.add('text-primary');
+      } else {
+        span.innerText = 'favorite_border';
+        span.style.fontVariationSettings = "'FILL' 0";
+        likeMini.classList.remove('text-primary');
+      }
+    });
+  }
+</script></main></body></html>

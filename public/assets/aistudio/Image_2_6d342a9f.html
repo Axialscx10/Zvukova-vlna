@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="sk"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#131313;color:#e5e2e1;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface-dim": "#131313", "on-primary-container": "#5c0002", "surface-container": "#201f1f", "secondary-fixed": "#7df4ff", "surface-variant": "#353534", "secondary-container": "#00eefc", "on-error": "#690005", "outline-variant": "#5f3e3a", "surface-container-high": "#2a2a2a", "surface-container-low": "#1c1b1b", "on-tertiary-fixed": "#2c0051", "on-surface-variant": "#eabcb5", "tertiary-fixed": "#f0dbff", "on-surface": "#e5e2e1", "error": "#ffb4ab", "on-secondary-container": "#00686f", "secondary": "#d3fbff", "error-container": "#93000a", "on-tertiary-fixed-variant": "#6900b3", "surface-tint": "#ffb4a9", "on-primary": "#690002", "on-tertiary": "#490080", "secondary-fixed-dim": "#00dbe9", "outline": "#b08781", "tertiary-fixed-dim": "#ddb7ff", "primary-fixed-dim": "#ffb4a9", "tertiary": "#ddb7ff", "primary-container": "#ff5545", "on-background": "#e5e2e1", "on-secondary-fixed": "#002022", "on-primary-fixed-variant": "#930005", "on-primary-fixed": "#410001", "surface-container-highest": "#353534", "surface-container-lowest": "#0e0e0e", "background": "#131313", "primary": "#ffb4a9", "surface-bright": "#393939", "on-tertiary-container": "#400071", "on-secondary": "#00363a", "on-error-container": "#ffdad6", "surface": "#131313", "inverse-on-surface": "#313030", "primary-fixed": "#ffdad5", "inverse-primary": "#c00009", "on-secondary-fixed-variant": "#004f54", "inverse-surface": "#e5e2e1", "tertiary-container": "#b76dff" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "gutter": "1rem", "space-md": "1rem", "margin": "1rem", "space-xs": "0.25rem", "space-xl": "2rem", "space-lg": "1.5rem", "margin-desktop": "2.5rem", "space-sm": "0.5rem", "gutter-sm": "0.75rem", "margin-tablet": "1.5rem" }, fontFamily: { "body-sm": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"] }, fontSize: { "body-sm": ["12px", { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "400" }], "headline-md": ["20px", { lineHeight: "26px", letterSpacing: "-0.01em", fontWeight: "700" }], "label-lg": ["14px", { lineHeight: "18px", letterSpacing: "0.01em", fontWeight: "600" }], "headline-sm": ["16px", { lineHeight: "22px", letterSpacing: "0em", fontWeight: "600" }], "body-lg": ["16px", { lineHeight: "24px", letterSpacing: "0em", fontWeight: "400" }], "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "600" }], "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }], "headline-xl": ["40px", { lineHeight: "48px", letterSpacing: "-0.03em", fontWeight: "800" }], "label-sm": ["10px", { lineHeight: "12px", letterSpacing: "0.05em", fontWeight: "700" }], "headline-xl-mobile": ["28px", { lineHeight: "34px", letterSpacing: "-0.02em", fontWeight: "800" }], "headline-lg-mobile": ["22px", { lineHeight: "28px", letterSpacing: "-0.015em", fontWeight: "700" }], "body-md": ["14px", { lineHeight: "20px", letterSpacing: "0em", fontWeight: "400" }] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 inset-x-0 z-50 bg-surface/80 backdrop-blur-xl pt-safe"><div class="h-16 px-gutter flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container shadow-[0_0_16px_rgba(255,85,69,0.35)]"><span class="material-symbols-outlined text-[20px]">graphic_eq</span></div><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight font-bold">SoundWave</span></div><div class="flex items-center gap-space-sm"><button aria-label="Cast / AirPlay" class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface hover:text-secondary-fixed transition-colors"><span class="material-symbols-outlined text-[22px]">cast</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-[140px] bg-surface min-h-screen"><div class="flex flex-col w-full pb-6">
+<!-- Search Header & Server Status Area -->
+<div class="px-gutter pt-2 flex flex-col gap-space-sm">
+<!-- Server Status Badge -->
+<div class="flex items-center justify-between px-space-sm py-1.5 rounded-full bg-surface-container-low shadow-sm">
+<div class="flex items-center gap-space-xs min-w-0">
+<span class="relative flex h-2 w-2 flex-shrink-0">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary-fixed opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-secondary-container"></span>
+</span>
+<span class="material-symbols-outlined text-[16px] text-secondary-fixed flex-shrink-0">dns</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+<span class="text-on-surface font-semibold">music.homebox</span>
+<span class="text-outline">·</span>
+          Navidrome (42 850 skladieb)
+        </p>
+</div>
+<div class="flex items-center gap-1 flex-shrink-0">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary-fixed bg-surface-container px-2 py-0.5 rounded-full">Online</span>
+</div>
+</div>
+<!-- Active Search Bar -->
+<div class="relative flex items-center bg-surface-container-high rounded-full shadow-md">
+<div class="absolute left-4 flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined text-[22px]">search</span>
+</div>
+<input class="w-full bg-transparent font-body-lg text-body-lg text-on-surface pl-12 pr-24 py-3 focus:outline-none placeholder-outline" id="navidrome-search-input" placeholder="Hľadaj v knižnici Navidrome..." type="text" value="Synthwave"/>
+<div class="absolute right-3 flex items-center gap-1">
+<button aria-label="Vymazať hľadanie" class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors" id="clear-search-btn" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+<button aria-label="Hlasové vyhľadávanie" class="w-8 h-8 rounded-full flex items-center justify-center text-secondary-container hover:bg-surface-variant transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">mic</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Horizontal Filter Chips (Full Bleed Scrolling) -->
+<div class="mt-space-md w-full overflow-x-auto no-scrollbar flex items-center gap-2 px-gutter">
+<button class="flex items-center justify-center px-4 py-1.5 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md font-bold shadow-[0_0_12px_rgba(255,85,69,0.3)] flex-shrink-0 active:scale-95 transition-transform">
+      Všetko
+    </button>
+<button class="flex items-center justify-center px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex-shrink-0 active:scale-95 transition-all">
+      Skladby
+    </button>
+<button class="flex items-center justify-center px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex-shrink-0 active:scale-95 transition-all">
+      Interpreti
+    </button>
+<button class="flex items-center justify-center px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex-shrink-0 active:scale-95 transition-all">
+      Albumy
+    </button>
+<button class="flex items-center justify-center px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex-shrink-0 active:scale-95 transition-all">
+      Playlisty
+    </button>
+<button class="flex items-center justify-center px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex-shrink-0 active:scale-95 transition-all">
+      Žánre
+    </button>
+</div>
+<!-- Audiophile / Advanced Navidrome Filter Bar -->
+<div class="px-gutter mt-space-md">
+<div class="p-space-sm rounded-xl bg-surface-container-low flex flex-col gap-2.5">
+<!-- Filter Bar Header -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<div class="w-6 h-6 rounded-md bg-secondary-container/20 flex items-center justify-center text-secondary-container">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-bold">Filtre (3 aktívne)</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+</div>
+<button class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">refresh</span>
+          Resetovať
+        </button>
+</div>
+<!-- Active Audiophile Tags -->
+<div class="flex flex-wrap gap-1.5">
+<!-- Tag 1: FLAC Lossless -->
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-highest text-secondary-fixed font-label-sm text-label-sm font-semibold shadow-sm">
+<span class="material-symbols-outlined text-[14px] text-secondary-container">check_circle</span>
+<span>FLAC / Bezstratové</span>
+<button aria-label="Odstrániť filter" class="hover:text-error ml-0.5"><span class="material-symbols-outlined text-[12px]">close</span></button>
+</div>
+<!-- Tag 2: 24-bit Hi-Res -->
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-highest text-secondary-fixed font-label-sm text-label-sm font-semibold shadow-sm">
+<span class="material-symbols-outlined text-[14px] text-secondary-container">graphic_eq</span>
+<span>Vzorkovanie ≥ 24-bit</span>
+<button aria-label="Odstrániť filter" class="hover:text-error ml-0.5"><span class="material-symbols-outlined text-[12px]">close</span></button>
+</div>
+<!-- Tag 3: Year Range -->
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-highest text-tertiary-fixed font-label-sm text-label-sm font-semibold shadow-sm">
+<span class="material-symbols-outlined text-[14px] text-tertiary">calendar_today</span>
+<span>Rok: 1980 – 1989 (Synth)</span>
+<button aria-label="Odstrániť filter" class="hover:text-error ml-0.5"><span class="material-symbols-outlined text-[12px]">close</span></button>
+</div>
+<!-- Tag 4: Bitrate -->
+<div class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+<span>Bitrate ≥ 320 kbps</span>
+<button aria-label="Pridať filter" class="hover:text-on-surface"><span class="material-symbols-outlined text-[12px]">add</span></button>
+</div>
+</div>
+</div>
+</div>
+<!-- Top Result (Najlepšia zhoda) Card -->
+<div class="px-gutter mt-space-lg flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">Najlepšia zhoda</span>
+<span class="font-label-sm text-label-sm text-outline">Navidrome ID: #art-409</span>
+</div>
+<div class="relative overflow-hidden rounded-xl bg-surface-container p-4 shadow-lg flex gap-4 items-center">
+<!-- Glow effect -->
+<div class="absolute -right-12 -top-12 w-36 h-36 rounded-full bg-primary-container/10 blur-2xl pointer-events-none"></div>
+<!-- Artist / Album Artwork -->
+<div class="relative w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 shadow-[0_8px_20px_rgba(0,0,0,0.6)]">
+<img class="w-full h-full object-cover" data-alt="Retro neon synthwave visual of a purple grid sunset with chrome typography, palm tree silhouettes against a vibrant magenta and deep crimson dusk sky, cinematic dark music cover style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtvNzKlGvTHJtzkVhJXrmGm-rPToqkq77tgpGxaOf7RI1BRtDafZ-__knscVPjdbF4ADSD2fcuw008dMz71fbyGTgjDTF0x5RAZdokNCy3O94leVTkpcUiPWl64KUI0NM6ftLzv7cBJvFISgBDEkEgLPdBLiUpGkC1l4jE_6Ci1Bk1IFmQpzS5zrQgYPtAnV8O4uDUPlPGMlVUGKr1R7qZOYH7DGlRduuCL-Gv-japzbinTZXr3H53"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-1 left-1 flex items-center gap-0.5 px-1 py-0.5 rounded bg-black/70 backdrop-blur-sm text-secondary-fixed font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[11px]">verified</span>
+<span>FLAC</span>
+</div>
+</div>
+<!-- Info & Actions -->
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-secondary-fixed bg-surface-container-high px-1.5 py-0.5 rounded font-bold uppercase">Interpret</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Los Angeles, CA</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface font-extrabold truncate mt-0.5">The Midnight</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">24 albumov · 186 skladieb na serveri</p>
+<!-- CTA Buttons -->
+<div class="flex items-center gap-2 mt-3">
+<button class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md font-bold shadow-[0_0_12px_rgba(255,85,69,0.3)] active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[18px]">play_arrow</span>
+<span>Prehrať</span>
+</button>
+<button class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-container-highest text-on-surface font-label-md text-label-md hover:bg-surface-bright active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[16px]">favorite_border</span>
+<span>Sledovať</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Tracks Section (Skladby 28) -->
+<div class="mt-space-lg flex flex-col">
+<div class="px-gutter flex items-center justify-between mb-space-xs">
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Skladby</h2>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-bold">28</span>
+</div>
+<button class="font-label-md text-label-md text-primary font-semibold hover:underline">Zobraziť všetky</button>
+</div>
+<!-- Track List Rows -->
+<div class="flex flex-col">
+<!-- Track 1 (Currently Playing Simulation) -->
+<div class="px-gutter py-2 flex items-center gap-space-sm hover:bg-surface-container transition-colors group">
+<div class="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container-high shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Synthwave sports car driving on a glowing neon grid road towards a massive scarlet and purple wireframe sun, dark background, 80s aesthetic album cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAREQ4X5Vy8FCo1wmfdB70SZdj6ueZ5uD5b8AO6UM68hqiMyovBx4zbiWC28KGZk-952BMODXpZRquIncIdi9L2cUwz7oZboQkdc-w6yqrdIC2s5KYoEWhCbcpfGurVRPciyvF_KODZzA3JDi8tIBsQiI1vDdu0zadTewl0hyuznmt-UzWS94jGiUBPZ3DL5xKHhnVpSkrBz0owKnuGHieHrdi8NVNVO5N5JV_n4g70fz7kGZVvb90P"/>
+<div class="absolute inset-0 bg-primary-container/20 flex items-center justify-center">
+<!-- Animated 3-bar equalizer -->
+<div class="flex items-end gap-[2px] h-4">
+<span class="w-1 bg-primary-container h-full animate-pulse rounded-full"></span>
+<span class="w-1 bg-primary-container h-2/3 animate-bounce rounded-full"></span>
+<span class="w-1 bg-primary-container h-4/5 animate-pulse rounded-full"></span>
+</div>
+</div>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center gap-1.5">
+<p class="font-label-lg text-label-lg text-primary truncate font-bold">Days of Thunder</p>
+<span class="font-label-sm text-label-sm px-1 rounded bg-secondary-fixed/20 text-secondary-fixed font-bold">24-BIT</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">The Midnight · Days of Thunder (EP)</p>
+</div>
+<div class="flex items-center gap-2 flex-shrink-0 text-on-surface-variant">
+<span class="font-body-sm text-body-sm">4:38</span>
+<button aria-label="Obľúbené" class="w-8 h-8 rounded-full flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+<button aria-label="Možnosti" class="w-8 h-8 rounded-full flex items-center justify-center hover:text-on-surface">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Track 2 -->
+<div class="px-gutter py-2 flex items-center gap-space-sm hover:bg-surface-container transition-colors group">
+<div class="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container-high shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Dark dramatic sports car headlights cutting through midnight fog with vivid red and cyan light trails, cinematic album artwork in synthwave style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAi_atiTApjNswAAHjotQPSSemPNV2MbxqpODB1dc8KRvOgex-AfW5orBENY8-hgRvxGQ41BhnOUtWglyuhW--9WXi9bOgUnSqqptUK1S0vc9vs4GXldwrFzigFyarEP9OrOpNxvvlWiHslSXLjlzx0JITZ-Jd4nSaz83_obioKLN6C0-gFZClTHqqSIbZtEMZm0KTAP0G3eFphhUKxJ4ra1kQeBcxmy5K08JNaEAVUaHgTUzN26Ih5"/>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center gap-1.5">
+<p class="font-label-lg text-label-lg text-on-surface truncate font-semibold">Nightcall</p>
+<span class="font-label-sm text-label-sm px-1 rounded bg-secondary-fixed/20 text-secondary-fixed font-bold">FLAC</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Kavinsky · OutRun</p>
+</div>
+<div class="flex items-center gap-2 flex-shrink-0 text-on-surface-variant">
+<span class="font-body-sm text-body-sm">4:19</span>
+<button aria-label="Obľúbené" class="w-8 h-8 rounded-full flex items-center justify-center hover:text-primary-container">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+<button aria-label="Možnosti" class="w-8 h-8 rounded-full flex items-center justify-center hover:text-on-surface">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Track 3 -->
+<div class="px-gutter py-2 flex items-center gap-space-sm hover:bg-surface-container transition-colors group">
+<div class="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container-high shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Chillwave retro geometric abstract sunset over calm digital ocean, smooth gradients of amber, crimson and cyan, lo-fi aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxbX5G9ztEOnAZz9ww6Z6ltyR9SzNaQbDF7_pdzzIBUrPB9QFXw1Fv_8ygqhpy9_f0N99nRPmEaods8lllGP7wOvnShU20Nt-cDrp9UltvmZGlOK6DYwPpJMy_PQyA7cFwG7GyjBe0MOqyUgOV-ahakizorLwzhxxbdTINfYBgIqzqId1zbFPA16qDfnek7PdDuoDoyF8XLtpqbYbsAh9A5JvDYeGfZMPDEEQIOk552nnN9klSyRgL"/>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center gap-1.5">
+<p class="font-label-lg text-label-lg text-on-surface truncate font-semibold">Resonance</p>
+<span class="font-label-sm text-label-sm px-1 rounded bg-surface-variant text-on-surface-variant font-bold">96kHz</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">HOME · Odyssey</p>
+</div>
+<div class="flex items-center gap-2 flex-shrink-0 text-on-surface-variant">
+<span class="font-body-sm text-body-sm">3:32</span>
+<button aria-label="Obľúbené" class="w-8 h-8 rounded-full flex items-center justify-center hover:text-primary-container">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+<button aria-label="Možnosti" class="w-8 h-8 rounded-full flex items-center justify-center hover:text-on-surface">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Track 4 -->
+<div class="px-gutter py-2 flex items-center gap-space-sm hover:bg-surface-container transition-colors group">
+<div class="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container-high shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Futuristic cyberpunk cyber-warrior in neon rain with neon red helmet visor and mechanical audio headphones, dystopian synth album artwork" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOQAftXweJTxp8uelTYz963wfOdx1-mD2Hxn0vHXohItVCOBRfxTld15n5HBRODI3eTJ5n11cqMGCnkrKwY270vGY6xiReGH-OqzhiyztzdK1aJvinQxxaVc4jMnzh_s9-D5mZvy8d8E9uzQvGN5Qv1D2etm8pzkuzVouFvdIJU_buHfjfBL9y9XgpLnNqsEvICqnX99SMYj2hNs0J5j-7wMYA6Muo3MNzaf4q3JMV_TTZdFWhj3Cn"/>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center gap-1.5">
+<p class="font-label-lg text-label-lg text-on-surface truncate font-semibold">Tech Noir</p>
+<span class="font-label-sm text-label-sm px-1 rounded bg-secondary-fixed/20 text-secondary-fixed font-bold">24-BIT</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">GUNSHIP · GUNSHIP (Deluxe)</p>
+</div>
+<div class="flex items-center gap-2 flex-shrink-0 text-on-surface-variant">
+<span class="font-body-sm text-body-sm">4:57</span>
+<button aria-label="Obľúbené" class="w-8 h-8 rounded-full flex items-center justify-center hover:text-primary-container">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+<button aria-label="Možnosti" class="w-8 h-8 rounded-full flex items-center justify-center hover:text-on-surface">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Albums Grid Section -->
+<div class="mt-space-lg px-gutter">
+<div class="flex items-center justify-between mb-space-sm">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Albumy na serveri</h2>
+<button class="font-label-md text-label-md text-primary font-semibold hover:underline">Všetky (14)</button>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<!-- Album 1 -->
+<div class="flex flex-col gap-2 p-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors group">
+<div class="relative w-full aspect-square rounded-lg overflow-hidden bg-surface-container-highest shadow-md">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Synthwave endless summer beach aesthetic with neon palm trees, retro wireframe horizon and magenta dusk tones, ultra high detail audio album cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAA_Z34I3VLNm36Wz9DN075nQWQvwRtZkaiG3hDzUhPL8Ere5j9xYEozbxeM23kokaCPGmd1odOAYEGsfKm9nfsJtaMqFF9B1aSTWOnbUCAL2LVGtYSBTjWOL4suv4S8AWQT7u_Cr8VyY2zOkzSJRlZmCAPhwHh_xMtgEJrnhH8PCSd8ZcmzggSVzLiivbTAsFLRTv1mFpNjK9OGQ20d4aaj5TJoOUnt-nC7JWc-K4vQdDNMACj6KZW"/>
+<div class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/60 backdrop-blur-md text-secondary-fixed font-label-sm text-label-sm font-bold">
+            FLAC
+          </div>
+<button aria-label="Rýchle prehratie" class="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">play_arrow</span>
+</button>
+</div>
+<div class="flex flex-col min-w-0">
+<p class="font-label-lg text-label-lg text-on-surface font-bold truncate">Endless Summer</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">The Midnight · 2016</p>
+<span class="font-label-sm text-label-sm text-outline mt-0.5">12 skladieb · 24-bit/48kHz</span>
+</div>
+</div>
+<!-- Album 2 -->
+<div class="flex flex-col gap-2 p-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors group">
+<div class="relative w-full aspect-square rounded-lg overflow-hidden bg-surface-container-highest shadow-md">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Retro sci-fi cassette tape floating in neon cyberpunk cosmic dust with deep violet, crimson, and turquoise highlights, dark electronic album cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNgvJK9AJJ19uGYGEh3Lg_SA0263ahhFEgyhOb-X8GLcgEjxxAfCaJvTWBGfjmFWGyEaYFCmkulP7SfQ6waqvOItwrNApJWS1bbshEmDP7FKukl2YEgY6FTFr4fpta7PFDEJ5Q1Vmq_g-P9WSwEXWsFGOu_wxAd8CJ_RyxOG5h57QD2Rr7S_uCJ0g4ovNKmPeiaU7q--7pF-Y7J7i7aN1k9ZdXm056z37MnN7jxA107qbjanTyNwW_"/>
+<div class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/60 backdrop-blur-md text-secondary-fixed font-label-sm text-label-sm font-bold">
+            24-BIT
+          </div>
+<button aria-label="Rýchle prehratie" class="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">play_arrow</span>
+</button>
+</div>
+<div class="flex flex-col min-w-0">
+<p class="font-label-lg text-label-lg text-on-surface font-bold truncate">Monsters</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">The Midnight · 2020</p>
+<span class="font-label-sm text-label-sm text-outline mt-0.5">15 skladieb · 24-bit/96kHz</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Artists Circular Shelves -->
+<div class="mt-space-lg px-gutter">
+<div class="flex items-center justify-between mb-space-sm">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Interpreti v žánri</h2>
+<button class="font-label-md text-label-md text-primary font-semibold hover:underline">Všetci</button>
+</div>
+<div class="grid grid-cols-3 gap-3">
+<!-- Artist 1 -->
+<div class="flex flex-col items-center text-center gap-1.5 p-2 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-16 h-16 rounded-full overflow-hidden shadow-md">
+<img class="w-full h-full object-cover" data-alt="Portrait of an electronic music producer in dark studio with red and cyan ambient neon light reflections, cinematic high fidelity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLaCqS7ya8XuDVJxkgl5jHimOGSAKodTZMtDYmSKJLapCUwntQdEp2vXStwzRwz-jxgYEPPqjlGUCDQqMCv7cOkpQgteWTiX_zq8i7Ul7fJ5yRrokId4Dg-ho8mpIwIQ05JdktVKGfDNSU23W6VduamygNRa5wp7TP8TIYDhj6IONDjED9k7k4c5Ozo5KUxnfGYDkUzVb3PkKh1Ffi5BwPQu64DXvz2ocawkZYBObR0eC-dRoUheEl"/>
+</div>
+<p class="font-label-md text-label-md text-on-surface font-bold truncate w-full">Kavinsky</p>
+<span class="font-label-sm text-label-sm text-on-surface-variant">42 skladieb</span>
+</div>
+<!-- Artist 2 -->
+<div class="flex flex-col items-center text-center gap-1.5 p-2 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-16 h-16 rounded-full overflow-hidden shadow-md">
+<img class="w-full h-full object-cover" data-alt="Silhouette of synth duo with 80s analog synthesizers in smoky stage lighting with deep scarlet and purple backlit lasers" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnL0R9adgmGgE2SgLF9-vRNeEAnmAfnUPY8r4mUsTmsIG1wlBf762kKHzJ8oGdWnt2tOJU3FlAaFWPPPCyppli6OzWBNSkwU7uM0zlDWgl1uYTyqRpPc1y0LKSgDpcOhhfmcyqnj3uadTFyBLkw_DTbTTmYmoN40tyhbRRNK7uwRAVRHpvsf8UAd-vgEcqjllhxHrDfKchY8m1kDtGOuyASPZULEFouQCLTe1HpK_Nr7gOJCdRcNu8"/>
+</div>
+<p class="font-label-md text-label-md text-on-surface font-bold truncate w-full">GUNSHIP</p>
+<span class="font-label-sm text-label-sm text-on-surface-variant">38 skladieb</span>
+</div>
+<!-- Artist 3 -->
+<div class="flex flex-col items-center text-center gap-1.5 p-2 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-16 h-16 rounded-full overflow-hidden shadow-md">
+<img class="w-full h-full object-cover" data-alt="Mysterious musician wearing illuminated chrome cyberpunk aviator shades in neon purple foggy night aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBA4Snyx1l9UcVGfWNHQIUh4ELOkFEhtcycWRKQv5E3_3UvNNeVsT-kFIjK1CX255eKC8DI7-gm8TD2GGgqGJ7wvWyM7hcIMCWdLAZ5Lz6pUAUh2kde3qD_HuZGTNk385IcFRRwnlqmfqTO-MQwnICAACJE-M1fX-6zTS9y_1c9UfrriymOnFSBmHJdK5uHaufsOeTZgs7XkwxElHGlxyaSIyX7vpOehJwuItSwTJQsJViAg-l4vWJe"/>
+</div>
+<p class="font-label-md text-label-md text-on-surface font-bold truncate w-full">Timecop1983</p>
+<span class="font-label-sm text-label-sm text-on-surface-variant">56 skladieb</span>
+</div>
+</div>
+</div>
+<!-- Navidrome Server Fast-Sync Tip / Micro Banner -->
+<div class="mt-space-lg mx-gutter p-space-sm rounded-xl bg-surface-container flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed/10 text-secondary-fixed flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">sync</span>
+</div>
+<div class="flex flex-col min-w-0">
+<p class="font-label-md text-label-md text-on-surface font-semibold truncate">Posledná synchronizácia servera</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Dnes o 03:15 · Žiadne chýbajúce tagy</p>
+</div>
+</div>
+<button class="px-2.5 py-1 rounded-md bg-surface-container-highest text-on-surface font-label-sm text-label-sm font-semibold hover:bg-surface-bright flex-shrink-0">
+      Skenovať
+    </button>
+</div>
+</div>
+<script>
+  // Simple micro-interaction for search input clear button
+  const clearBtn = document.getElementById('clear-search-btn');
+  const searchInput = document.getElementById('navidrome-search-input');
+
+  if (clearBtn && searchInput) {
+    clearBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      searchInput.focus();
+    });
+  }
+
+  // Set the "Explore" nav link to active state in parent shell
+  const exploreNav = document.querySelector('nav a[data-path="explore"]');
+  if (exploreNav) {
+    exploreNav.classList.remove('text-on-surface-variant');
+    exploreNav.classList.add('text-primary-container');
+    const exploreIcon = exploreNav.querySelector('.material-symbols-outlined');
+    if (exploreIcon) {
+      exploreIcon.style.fontVariationSettings = "'FILL' 1";
+    }
+  }
+</script></main><div class="fixed bottom-16 inset-x-0 z-40 px-gutter-sm mb-space-xs pointer-events-none"><div class="pointer-events-auto w-full bg-[#121212]/75 backdrop-blur-2xl rounded-xl p-space-xs flex items-center gap-space-sm shadow-[0_8px_32px_rgba(0,0,0,0.85)] relative overflow-hidden"><div class="absolute top-0 left-0 right-0 h-[2px] bg-surface-variant"><div class="h-full bg-primary-container w-[45%]"></div></div><div class="w-10 h-10 rounded-lg bg-surface-container-high flex-shrink-0 relative overflow-hidden flex items-center justify-center"><span class="material-symbols-outlined text-secondary-fixed-dim text-[22px]">album</span></div><div class="flex flex-col flex-1 min-w-0 pr-space-xs"><div class="flex items-center gap-space-xs"><p class="font-label-lg text-label-lg text-on-surface truncate">After Dark</p><span class="font-label-sm text-label-sm px-1 rounded bg-secondary-fixed/20 text-secondary-fixed font-bold leading-tight">FLAC</span></div><p class="font-body-sm text-body-sm text-on-surface-variant truncate">Mr.Kitty • Navidrome</p></div><div class="flex items-center gap-space-xs"><button aria-label="Like track" class="w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[22px]">favorite</span></button><button aria-label="Play or pause" class="w-11 h-11 flex items-center justify-center rounded-full bg-primary-container text-on-primary-container hover:scale-95 transition-transform shadow-[0_0_12px_rgba(255,85,69,0.35)]"><span class="material-symbols-outlined text-[24px]">pause</span></button><button aria-label="Next track" class="w-11 h-11 flex items-center justify-center text-on-surface hover:text-primary transition-colors"><span class="material-symbols-outlined text-[22px]">skip_next</span></button></div></div></div><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-2xl" data-active-classes="text-primary-container"><div class="flex justify-around items-center h-16 px-gutter"><a class="flex flex-col items-center justify-center gap-1 min-w-[56px] h-12 text-on-surface-variant transition-colors" data-path="home" href="#"><span class="material-symbols-outlined text-[22px]">home</span><span class="font-label-sm text-label-sm">Home</span></a><a aria-current="page" class="flex flex-col items-center justify-center gap-1 min-w-[56px] h-12 transition-colors text-primary-container" data-path="explore" href="#"><span class="material-symbols-outlined text-[22px]">explore</span><span class="font-label-sm text-label-sm">Explore</span></a><a class="flex flex-col items-center justify-center gap-1 min-w-[56px] h-12 text-on-surface-variant transition-colors" data-path="library" href="#"><span class="material-symbols-outlined text-[22px]">library_music</span><span class="font-label-sm text-label-sm">Library</span></a><a class="flex flex-col items-center justify-center gap-1 min-w-[56px] h-12 text-on-surface-variant transition-colors" data-path="upgrade" href="#"><span class="material-symbols-outlined text-[22px]">star</span><span class="font-label-sm text-label-sm">Upgrade</span></a></div></nav></body></html>

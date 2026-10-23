@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">SoundWave</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_explore">Explore</string>
+    <string name="nav_library">Library</string>
+    <string name="nav_upgrade">Upgrade</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="server_login">Server Login</string>
+    <string name="equalizer_title">Ekvalizér A Zvukové Profily</string>
+    <string name="autoeq_title">AutoEQ Kalibrácia slúchadiel</string>
+    <string name="streaming_quality">Kvalita streamovania</string>
+</resources>

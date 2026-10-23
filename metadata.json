@@ -1,0 +1,6 @@
+{
+  "name": "SoundWave",
+  "description": "Audiophile Navidrome & Subsonic Hi-Res Music Streaming Client with 10-band DSP Equalizer and AutoEQ calibration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
