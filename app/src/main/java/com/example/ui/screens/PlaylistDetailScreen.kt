@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -52,7 +53,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.data.SoundWaveCatalog
 import com.example.data.TrackItem
 import com.example.ui.SoundWaveUiState
 import com.example.ui.components.AnimatedEqualizerBars
@@ -70,14 +70,38 @@ import com.example.ui.theme.SurfaceContainerHighest
 import com.example.ui.theme.SurfaceContainerLow
 import com.example.ui.theme.SurfaceContainerLowest
 
+private val DetailLosslessSuffixes = setOf("flac", "alac", "wav", "aiff", "aif", "ape", "wv", "dsf", "dff")
+
 @Composable
 fun PlaylistDetailScreen(
     uiState: SoundWaveUiState,
-    onTrackClick: (TrackItem) -> Unit,
+    onTrackClick: (TrackItem, List<TrackItem>) -> Unit,
+    onPlayAll: (Boolean) -> Unit,
     onTrackLikeToggle: (String) -> Unit,
     onOpenExplore: () -> Unit,
-    onOpenStreamingSettings: () -> Unit
+    onOpenStreamingSettings: () -> Unit,
+    onOpenTrackMenu: (TrackItem) -> Unit = {}
 ) {
+    val detail = uiState.detail
+    if (detail == null) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Surface),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = "Nič na zobrazenie", color = OnSurfaceVariant, fontSize = 14.sp)
+        }
+        return
+    }
+    val tracks = detail.tracks
+    val qualityLabel = when {
+        tracks.isEmpty() -> null
+        tracks.any { it.bitDepth >= 24 } -> "HI-RES LOSSLESS"
+        tracks.all { it.suffix in DetailLosslessSuffixes } -> "LOSSLESS"
+        else -> null
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -105,7 +129,7 @@ fun PlaylistDetailScreen(
                         modifier = Modifier.size(16.dp)
                     )
                     Text(
-                        text = "SYNCHRONIZOVANÉ",
+                        text = detail.kind.uppercase(),
                         color = Secondary,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
@@ -119,12 +143,11 @@ fun PlaylistDetailScreen(
                 ) {
                     UtilityCircleButton(icon = Icons.Default.Search, onClick = onOpenExplore)
                     UtilityCircleButton(icon = Icons.Default.Cast, onClick = onOpenStreamingSettings)
-                    UtilityCircleButton(icon = Icons.Default.Share, onClick = {})
                 }
             }
         }
 
-        // Hero Section: Synthwave Nights Cover + Badges + Actions
+        // Hero Section: cover + badges + actions
         item {
             Column(
                 modifier = Modifier
@@ -132,7 +155,6 @@ fun PlaylistDetailScreen(
                     .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Album Artwork with Depth Framing
                 Box(
                     modifier = Modifier
                         .size(224.dp)
@@ -141,74 +163,73 @@ fun PlaylistDetailScreen(
                         .background(SurfaceContainerHigh)
                 ) {
                     NetImage(
-                        url = SoundWaveCatalog.SYNTHWAVE_NIGHTS_COVER_URL,
-                        contentDescription = "Synthwave Nights",
+                        url = detail.coverUrl,
+                        contentDescription = detail.title,
                         modifier = Modifier.fillMaxSize()
                     )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                Brush.verticalGradient(
-                                    colors = listOf(
-                                        Color.Transparent,
-                                        SurfaceContainerLowest.copy(alpha = 0.75f)
-                                    )
-                                )
-                            )
-                    )
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(10.dp)
-                            .clip(RoundedCornerShape(6.dp))
-                            .background(SurfaceContainerLowest.copy(alpha = 0.9f))
-                            .padding(horizontal = 8.dp, vertical = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(5.dp)
-                    ) {
+                    if (qualityLabel != null) {
                         Box(
                             modifier = Modifier
-                                .size(6.dp)
-                                .clip(CircleShape)
-                                .background(Secondary)
+                                .fillMaxSize()
+                                .background(
+                                    Brush.verticalGradient(
+                                        colors = listOf(
+                                            Color.Transparent,
+                                            SurfaceContainerLowest.copy(alpha = 0.75f)
+                                        )
+                                    )
+                                )
                         )
-                        Text(
-                            text = "HI-RES LOSSLESS",
-                            color = Secondary,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 0.6.sp
-                        )
+                        Row(
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(10.dp)
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(SurfaceContainerLowest.copy(alpha = 0.9f))
+                                .padding(horizontal = 8.dp, vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(5.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(6.dp)
+                                    .clip(CircleShape)
+                                    .background(Secondary)
+                            )
+                            Text(
+                                text = qualityLabel,
+                                color = Secondary,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 0.6.sp
+                            )
+                        }
                     }
                 }
 
                 Spacer(modifier = Modifier.height(14.dp))
 
                 Text(
-                    text = "Synthwave Nights",
+                    text = detail.title,
                     color = OnSurface,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.ExtraBold,
                     letterSpacing = (-0.5).sp,
                     textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(SpanStyle(color = OnSurfaceVariant)) {
-                            append("Vytvoril ")
-                        }
-                        withStyle(SpanStyle(color = OnSurface, fontWeight = FontWeight.SemiBold)) {
-                            append("Alex • Nočný Jazdec")
-                        }
-                    },
-                    fontSize = 12.sp
-                )
+                if (detail.subtitle.isNotBlank()) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = detail.subtitle,
+                        color = OnSurfaceVariant,
+                        fontSize = 13.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                // Navidrome & Audiophile Server Badges
+                // Server & format badges
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(6.dp)
@@ -229,39 +250,44 @@ fun PlaylistDetailScreen(
                             modifier = Modifier.size(15.dp)
                         )
                         Text(
-                            text = "music.homebox (Navidrome)",
+                            text = "${uiState.serverHost} (Navidrome)",
                             color = OnSurface,
                             fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
 
-                    Row(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(50))
-                            .background(SurfaceContainerHigh)
-                            .padding(horizontal = 12.dp, vertical = 5.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.GraphicEq,
-                            contentDescription = null,
-                            tint = Secondary,
-                            modifier = Modifier.size(15.dp)
-                        )
-                        Text(
-                            text = "FLAC Lossless • 24-bit / 44.1 kHz",
-                            color = Secondary,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
+                    val firstTech = tracks.firstOrNull()?.techLine.orEmpty()
+                    if (firstTech.isNotBlank()) {
+                        Row(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(50))
+                                .background(SurfaceContainerHigh)
+                                .padding(horizontal = 12.dp, vertical = 5.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.GraphicEq,
+                                contentDescription = null,
+                                tint = Secondary,
+                                modifier = Modifier.size(15.dp)
+                            )
+                            Text(
+                                text = firstTech,
+                                color = Secondary,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
                     }
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "64 skladieb • 3 hod 48 min • Aktualizované pred 2 dňami",
+                    text = detail.metaLine,
                     color = OnSurfaceVariant,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold
@@ -282,7 +308,7 @@ fun PlaylistDetailScreen(
                             .shadow(14.dp, RoundedCornerShape(50), spotColor = PrimaryContainer)
                             .clip(RoundedCornerShape(50))
                             .background(PrimaryContainer)
-                            .clickable { onTrackClick(SoundWaveCatalog.playlistTracks.first()) }
+                            .clickable { onPlayAll(false) }
                             .testTag("playlist_play_btn"),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
@@ -308,7 +334,7 @@ fun PlaylistDetailScreen(
                             .height(48.dp)
                             .clip(RoundedCornerShape(50))
                             .background(SurfaceContainerHighest)
-                            .clickable { onTrackClick(SoundWaveCatalog.playlistTracks.random()) },
+                            .clickable { onPlayAll(true) },
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
@@ -326,26 +352,11 @@ fun PlaylistDetailScreen(
                             fontWeight = FontWeight.SemiBold
                         )
                     }
-
-                    Box(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(SurfaceContainerHigh),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.DownloadDone,
-                            contentDescription = "Stiahnuté do offline",
-                            tint = Secondary,
-                            modifier = Modifier.size(22.dp)
-                        )
-                    }
                 }
             }
         }
 
-        // Tracklist Header with Controls
+        // Tracklist Header
         item {
             Column(
                 modifier = Modifier
@@ -376,58 +387,58 @@ fun PlaylistDetailScreen(
                                 .padding(horizontal = 8.dp, vertical = 2.dp)
                         ) {
                             Text(
-                                text = "64",
+                                text = tracks.size.toString(),
                                 color = OnSurfaceVariant,
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.Bold
                             )
                         }
                     }
-
-                    Row(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(50))
-                            .background(SurfaceContainer)
-                            .padding(horizontal = 12.dp, vertical = 5.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(5.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Sort,
-                            contentDescription = null,
-                            tint = OnSurfaceVariant,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            text = "Vlastné poradie",
-                            color = OnSurface,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Icon(
-                            imageVector = Icons.Default.ExpandMore,
-                            contentDescription = null,
-                            tint = OnSurfaceVariant,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
                 }
 
                 HorizontalDivider(color = SurfaceContainerHigh.copy(alpha = 0.45f))
                 Spacer(modifier = Modifier.height(6.dp))
 
-                SoundWaveCatalog.playlistTracks.forEachIndexed { index, track ->
-                    val isActive = index == 0
-                    val isLiked = track.id in uiState.likedTrackIds
-                    PlaylistTrackItemRow(
-                        index = index + 1,
-                        track = track,
-                        isActive = isActive,
-                        isLiked = isLiked,
-                        onClick = { onTrackClick(track) },
-                        onLikeClick = { onTrackLikeToggle(track.id) }
+                if (detail.isLoading) {
+                    Text(
+                        text = "Načítavam skladby…",
+                        color = OnSurfaceVariant,
+                        fontSize = 13.sp,
+                        modifier = Modifier.padding(vertical = 12.dp)
+                    )
+                } else if (detail.error != null) {
+                    Text(
+                        text = detail.error ?: "",
+                        color = OnSurfaceVariant,
+                        fontSize = 13.sp,
+                        modifier = Modifier.padding(vertical = 12.dp)
+                    )
+                } else if (tracks.isEmpty()) {
+                    Text(
+                        text = "Žiadne skladby",
+                        color = OnSurfaceVariant,
+                        fontSize = 13.sp,
+                        modifier = Modifier.padding(vertical = 12.dp)
                     )
                 }
+            }
+        }
+
+        itemsIndexed(tracks, key = { index, t -> "$index:${t.id}" }) { index, track ->
+            val isActive = uiState.currentTrack.id == track.id
+            val isLiked = track.id in uiState.likedTrackIds
+            val isDownloaded = track.id in uiState.downloadedTrackIds
+            Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                PlaylistTrackItemRow(
+                    index = index + 1,
+                    track = track,
+                    isActive = isActive,
+                    isLiked = isLiked,
+                    isDownloaded = isDownloaded,
+                    onClick = { onTrackClick(track, tracks) },
+                    onLikeClick = { onTrackLikeToggle(track.id) },
+                    onMenuClick = { onOpenTrackMenu(track) }
+                )
             }
         }
     }
@@ -461,8 +472,10 @@ private fun PlaylistTrackItemRow(
     track: TrackItem,
     isActive: Boolean,
     isLiked: Boolean,
+    isDownloaded: Boolean,
     onClick: () -> Unit,
-    onLikeClick: () -> Unit
+    onLikeClick: () -> Unit,
+    onMenuClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -530,25 +543,27 @@ private fun PlaylistTrackItemRow(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(
-                                if (isActive) Primary.copy(alpha = 0.2f)
-                                else SurfaceContainerHighest
+                    if (track.badge.isNotBlank()) {
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(4.dp))
+                                .background(
+                                    if (isActive) Primary.copy(alpha = 0.2f)
+                                    else SurfaceContainerHighest
+                                )
+                                .padding(horizontal = 5.dp, vertical = 1.dp)
+                        ) {
+                            Text(
+                                text = track.badge,
+                                color = when {
+                                    isActive -> Primary
+                                    track.isHiResBadgeCyan -> Secondary
+                                    else -> OnSurfaceVariant
+                                },
+                                fontSize = 9.sp,
+                                fontWeight = FontWeight.Bold
                             )
-                            .padding(horizontal = 5.dp, vertical = 1.dp)
-                    ) {
-                        Text(
-                            text = track.badge,
-                            color = when {
-                                isActive -> Primary
-                                track.isHiResBadgeCyan -> Secondary
-                                else -> OnSurfaceVariant
-                            },
-                            fontSize = 9.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                        }
                     }
                     Text(
                         text = "${track.artist} • ${track.album}",
@@ -565,7 +580,7 @@ private fun PlaylistTrackItemRow(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            if (track.isDownloaded) {
+            if (isDownloaded) {
                 Icon(
                     imageVector = Icons.Default.DownloadDone,
                     contentDescription = "Stiahnuté",
@@ -593,7 +608,7 @@ private fun PlaylistTrackItemRow(
                 )
             }
             IconButton(
-                onClick = onClick,
+                onClick = onMenuClick,
                 modifier = Modifier.size(30.dp)
             ) {
                 Icon(

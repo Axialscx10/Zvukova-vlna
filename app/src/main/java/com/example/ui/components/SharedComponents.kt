@@ -47,6 +47,14 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
+import androidx.compose.material.icons.filled.Bedtime
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.DownloadDone
+import androidx.compose.material.icons.filled.PlaylistAdd
+import androidx.compose.material.icons.filled.QueueMusic
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.filled.WorkspacePremium
@@ -82,7 +90,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.data.AppScreen
-import com.example.data.SoundWaveCatalog
+import com.example.data.SleepTimerOption
 import com.example.data.TrackItem
 import com.example.ui.theme.OnPrimary
 import com.example.ui.theme.OnPrimaryContainer
@@ -346,7 +354,7 @@ fun SoundWaveMainTopBar(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Search,
-                            contentDescription = "Search",
+                            contentDescription = "Hľadať",
                             tint = OnSurface,
                             modifier = Modifier.size(22.dp)
                         )
@@ -362,20 +370,12 @@ fun SoundWaveMainTopBar(
                         .testTag("top_profile_button"),
                     contentAlignment = Alignment.Center
                 ) {
-                    if (useGraphicEqLogo) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Profil / Obrazovky",
-                            tint = OnPrimary,
-                            modifier = Modifier.size(18.dp)
-                        )
-                    } else {
-                        NetImage(
-                            url = SoundWaveCatalog.PROFILE_AVATAR_URL,
-                            contentDescription = "Profil / Obrazovky",
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "Profil / Obrazovky",
+                        tint = OnPrimary,
+                        modifier = Modifier.size(18.dp)
+                    )
                 }
             }
         }
@@ -476,11 +476,19 @@ fun StackTopBar(
                             .clip(CircleShape)
                             .clickable { onProfileClick() }
                     ) {
-                        NetImage(
-                            url = SoundWaveCatalog.PROFILE_AVATAR_URL,
-                            contentDescription = "Profile",
-                            modifier = Modifier.fillMaxSize()
-                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Primary),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = "Profil",
+                                tint = OnPrimary,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -494,8 +502,8 @@ fun GlassMiniPlayerDock(
     isPlaying: Boolean,
     progress: Float,
     isLiked: Boolean,
-    subtitleVariant: String = "Mr.Kitty • Navidrome",
-    badgeText: String = "FLAC",
+    subtitleVariant: String = "",
+    badgeText: String = "",
     showSkipPrevious: Boolean = false,
     showCastButton: Boolean = false,
     showAirPodsSubtitle: Boolean = false,
@@ -562,7 +570,7 @@ fun GlassMiniPlayerDock(
                             contentDescription = track.title,
                             modifier = Modifier.fillMaxSize()
                         )
-                        if (badgeText == "24-BIT") {
+                        if (badgeText.endsWith("24-BIT") || badgeText.endsWith("32-BIT")) {
                             Box(
                                 modifier = Modifier
                                     .align(Alignment.BottomCenter)
@@ -572,7 +580,7 @@ fun GlassMiniPlayerDock(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    text = "24-BIT",
+                                    text = badgeText.takeLast(6),
                                     color = OnPrimaryContainer,
                                     fontSize = 8.sp,
                                     fontWeight = FontWeight.ExtraBold
@@ -596,7 +604,7 @@ fun GlassMiniPlayerDock(
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
-                            if (!showAirPodsSubtitle) {
+                            if (!showAirPodsSubtitle && badgeText.isNotBlank()) {
                                 Box(
                                     modifier = Modifier
                                         .clip(RoundedCornerShape(4.dp))
@@ -615,41 +623,13 @@ fun GlassMiniPlayerDock(
 
                         Spacer(modifier = Modifier.height(2.dp))
 
-                        if (showAirPodsSubtitle) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)
-                            ) {
-                                Text(
-                                    text = track.artist,
-                                    color = OnSurfaceVariant,
-                                    fontSize = 11.sp,
-                                    maxLines = 1
-                                )
-                                Text("•", color = OnSurfaceVariant.copy(alpha = 0.5f), fontSize = 10.sp)
-                                Icon(
-                                    imageVector = Icons.Default.Headphones,
-                                    contentDescription = null,
-                                    tint = Secondary,
-                                    modifier = Modifier.size(12.dp)
-                                )
-                                Text(
-                                    text = "AirPods Pro",
-                                    color = Secondary,
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    maxLines = 1
-                                )
-                            }
-                        } else {
-                            Text(
-                                text = subtitleVariant,
-                                color = OnSurfaceVariant,
-                                fontSize = 12.sp,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
+                        Text(
+                            text = subtitleVariant,
+                            color = OnSurfaceVariant,
+                            fontSize = 12.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
                     }
                 }
 
@@ -708,7 +688,7 @@ fun GlassMiniPlayerDock(
                     ) {
                         Icon(
                             imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                            contentDescription = if (isPlaying) "Pause" else "Play",
+                            contentDescription = if (isPlaying) "Pozastaviť" else "Prehrať",
                             tint = if (showSkipPrevious) OnPrimary else OnPrimaryContainer,
                             modifier = Modifier.size(24.dp)
                         )
@@ -773,7 +753,7 @@ fun SoundWaveBottomNavBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             BottomNavItem(
-                label = "Home",
+                label = "Domov",
                 selected = currentScreen == AppScreen.HOME,
                 selectedIcon = Icons.Filled.Home,
                 unselectedIcon = Icons.Outlined.Home,
@@ -781,7 +761,7 @@ fun SoundWaveBottomNavBar(
                 testTag = "nav_home"
             )
             BottomNavItem(
-                label = "Explore",
+                label = "Objavuj",
                 selected = currentScreen == AppScreen.EXPLORE,
                 selectedIcon = Icons.Filled.Explore,
                 unselectedIcon = Icons.Outlined.Explore,
@@ -789,7 +769,7 @@ fun SoundWaveBottomNavBar(
                 testTag = "nav_explore"
             )
             BottomNavItem(
-                label = "Library",
+                label = "Knižnica",
                 selected = currentScreen == AppScreen.LIBRARY,
                 selectedIcon = Icons.Filled.LibraryMusic,
                 unselectedIcon = Icons.Outlined.LibraryMusic,
@@ -797,7 +777,7 @@ fun SoundWaveBottomNavBar(
                 testTag = "nav_library"
             )
             BottomNavItem(
-                label = "Upgrade",
+                label = "Kvalita",
                 selected = currentScreen == AppScreen.UPGRADE_STREAMING,
                 selectedIcon = Icons.Filled.WorkspacePremium,
                 unselectedIcon = Icons.Outlined.WorkspacePremium,
@@ -849,7 +829,8 @@ fun QuickScreenSwitcherModal(
     currentScreen: AppScreen,
     onSelectScreen: (AppScreen) -> Unit,
     onOpenAutoEq: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onLogout: (() -> Unit)? = null
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ModalBottomSheet(
@@ -881,15 +862,13 @@ fun QuickScreenSwitcherModal(
             Spacer(modifier = Modifier.height(4.dp))
 
             val items = listOf(
-                Triple(AppScreen.HOME, "1. Home (Quick Picks & Mixes)", Icons.Default.Home),
-                Triple(AppScreen.EXPLORE, "2. Explore (Navidrome Search & Filters)", Icons.Default.Explore),
-                Triple(AppScreen.LIBRARY, "3. Library (Kolekcia & Zoznamy)", Icons.Default.LibraryMusic),
-                Triple(AppScreen.ARTIST_DETAIL, "4. Detail Interpreta (The Midnight)", Icons.Default.Star),
-                Triple(AppScreen.PLAYLIST_DETAIL, "5. Detail Playlistu (Synthwave Nights)", Icons.Default.Album),
-                Triple(AppScreen.NOW_PLAYING, "6. Now Playing (Waveform & Lyrics)", Icons.Default.PlayArrow),
-                Triple(AppScreen.EQUALIZER, "7. 10-Pásmový Ekvalizér & DSP", Icons.Default.Equalizer),
-                Triple(AppScreen.UPGRADE_STREAMING, "8. Kvalita streamovania & ffmpeg", Icons.Default.Tune),
-                Triple(AppScreen.SERVER_LOGIN, "9. Pripojenie k Navidrome (Server Login)", Icons.Default.Dns)
+                Triple(AppScreen.HOME, "1. Domov (Rýchly výber & mixy)", Icons.Default.Home),
+                Triple(AppScreen.EXPLORE, "2. Objavuj (Hľadanie v Navidrome)", Icons.Default.Explore),
+                Triple(AppScreen.LIBRARY, "3. Knižnica (Kolekcia & zoznamy)", Icons.Default.LibraryMusic),
+                Triple(AppScreen.NOW_PLAYING, "4. Práve hrá (Texty & fronta)", Icons.Default.PlayArrow),
+                Triple(AppScreen.EQUALIZER, "5. 10-Pásmový Ekvalizér & DSP", Icons.Default.Equalizer),
+                Triple(AppScreen.UPGRADE_STREAMING, "6. Kvalita streamovania & ffmpeg", Icons.Default.Tune),
+                Triple(AppScreen.SERVER_LOGIN, "7. Pripojenie k Navidrome (Prihlásenie)", Icons.Default.Dns)
             )
 
             items.forEach { (screen, label, icon) ->
@@ -954,7 +933,7 @@ fun QuickScreenSwitcherModal(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "10. AutoEQ Kalibrácia slúchadiel (Modal)",
+                        text = "8. AutoEQ Kalibrácia slúchadiel (Modal)",
                         color = OnSurface,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold
@@ -967,6 +946,364 @@ fun QuickScreenSwitcherModal(
                     fontWeight = FontWeight.Bold
                 )
             }
+
+            if (onLogout != null) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(SurfaceContainer)
+                        .clickable { onLogout() }
+                        .padding(horizontal = 14.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = null,
+                        tint = OnSurfaceVariant,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Text(
+                        text = "Odhlásiť sa zo servera",
+                        color = OnSurface,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TrackActionsBottomSheet(
+    track: TrackItem,
+    isDownloaded: Boolean,
+    isDownloading: Boolean,
+    isLiked: Boolean,
+    onDismiss: () -> Unit,
+    onPlayNow: () -> Unit,
+    onPlayNext: () -> Unit,
+    onAddToQueue: () -> Unit,
+    onDownload: () -> Unit,
+    onDeleteDownload: () -> Unit,
+    onToggleLike: () -> Unit,
+    onShare: () -> Unit
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        containerColor = SurfaceContainerLow,
+        contentColor = OnSurface
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 32.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            // Header: Track preview
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(SurfaceContainer)
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(52.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(SurfaceContainerHighest)
+                ) {
+                    NetImage(
+                        url = track.imageUrl,
+                        contentDescription = track.title,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = track.title,
+                        color = OnSurface,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = "${track.artist} • ${track.album.ifBlank { "Navidrome" }}",
+                        color = OnSurfaceVariant,
+                        fontSize = 12.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    if (track.techLine.isNotBlank()) {
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = track.techLine,
+                            color = SecondaryFixed,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            // Actions
+            TrackActionRow(
+                icon = Icons.Default.PlayArrow,
+                title = "Prehrať teraz",
+                subtitle = "Spustiť okamžité prehrávanie",
+                iconTint = Primary,
+                onClick = {
+                    onPlayNow()
+                    onDismiss()
+                }
+            )
+
+            TrackActionRow(
+                icon = Icons.Default.QueueMusic,
+                title = "Prehrať ako nasledujúcu",
+                subtitle = "Zaradiť hneď za práve hrajúcu skladbu",
+                iconTint = PrimaryContainer,
+                onClick = {
+                    onPlayNext()
+                    onDismiss()
+                }
+            )
+
+            TrackActionRow(
+                icon = Icons.Default.PlaylistAdd,
+                title = "Pridať na koniec poradia",
+                subtitle = "Zaradiť na koniec aktuálneho zoznamu",
+                iconTint = SecondaryFixed,
+                onClick = {
+                    onAddToQueue()
+                    onDismiss()
+                }
+            )
+
+            if (isDownloaded) {
+                TrackActionRow(
+                    icon = Icons.Default.Delete,
+                    title = "Odstrániť zo stiahnutých",
+                    subtitle = "Uvoľniť miesto v pamäti telefónu",
+                    iconTint = Primary,
+                    onClick = {
+                        onDeleteDownload()
+                        onDismiss()
+                    }
+                )
+            } else {
+                TrackActionRow(
+                    icon = if (isDownloading) Icons.Default.DownloadDone else Icons.Default.Download,
+                    title = if (isDownloading) "Sťahuje sa do pamäte…" else "Stiahnuť na offline počúvanie",
+                    subtitle = if (isDownloading) "Počkajte na stiahnutie" else "Uložiť skladbu na počúvanie bez internetu",
+                    iconTint = if (isDownloading) SecondaryFixed else PrimaryContainer,
+                    onClick = {
+                        if (!isDownloading) {
+                            onDownload()
+                            onDismiss()
+                        }
+                    }
+                )
+            }
+
+            TrackActionRow(
+                icon = if (isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                title = if (isLiked) "Odstrániť z obľúbených" else "Pridať do obľúbených",
+                subtitle = if (isLiked) "Odobrať hviezdičku na serveri" else "Označiť srdiečkom / hviezdičkou",
+                iconTint = if (isLiked) PrimaryContainer else OnSurfaceVariant,
+                onClick = {
+                    onToggleLike()
+                    onDismiss()
+                }
+            )
+
+            TrackActionRow(
+                icon = Icons.Default.Share,
+                title = "Zdieľať skladbu",
+                subtitle = "Odoslať názov a interpreta do inej aplikácie",
+                iconTint = OnSurface,
+                onClick = {
+                    onShare()
+                    onDismiss()
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun TrackActionRow(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    title: String,
+    subtitle: String,
+    iconTint: Color,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(SurfaceContainer)
+            .clickable { onClick() }
+            .padding(horizontal = 14.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(38.dp)
+                .clip(CircleShape)
+                .background(SurfaceContainerHighest),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = iconTint,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = title,
+                color = OnSurface,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+            Text(
+                text = subtitle,
+                color = OnSurfaceVariant,
+                fontSize = 11.sp
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SleepTimerBottomSheet(
+    currentOption: SleepTimerOption,
+    remainingSeconds: Int,
+    onDismiss: () -> Unit,
+    onSelectOption: (SleepTimerOption) -> Unit
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        containerColor = SurfaceContainerLow,
+        contentColor = OnSurface
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 32.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .background(PrimaryContainer.copy(alpha = 0.2f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Bedtime,
+                        contentDescription = null,
+                        tint = PrimaryContainer,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+                Column {
+                    Text(
+                        text = "Časovač spánku",
+                        color = OnSurface,
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "Automatické pozastavenie po vybranom čase",
+                        color = OnSurfaceVariant,
+                        fontSize = 12.sp
+                    )
+                }
+            }
+
+            if (remainingSeconds > 0) {
+                val mins = remainingSeconds / 60
+                val secs = remainingSeconds % 60
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(PrimaryContainer.copy(alpha = 0.15f))
+                        .border(1.dp, PrimaryContainer.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
+                        .padding(horizontal = 14.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Aktívny odpočet:",
+                        color = OnSurface,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Text(
+                        text = String.format(java.util.Locale.US, "%02d:%02d", mins, secs),
+                        color = PrimaryContainer,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(2.dp))
+
+            SleepTimerOption.values().forEach { option ->
+                val isSelected = currentOption == option
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(if (isSelected) PrimaryContainer.copy(alpha = 0.18f) else SurfaceContainer)
+                        .clickable { onSelectOption(option) }
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = option.label,
+                        color = if (isSelected) Primary else OnSurface,
+                        fontSize = 14.sp,
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                    )
+                    if (isSelected) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = "Zvolené",
+                            tint = PrimaryContainer,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+

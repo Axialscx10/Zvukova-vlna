@@ -50,7 +50,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.AlbumItem
 import com.example.data.PlaylistItem
-import com.example.data.SoundWaveCatalog
 import com.example.data.TrackItem
 import com.example.ui.SoundWaveUiState
 import com.example.ui.components.AnimatedEqualizerBars
@@ -74,13 +73,21 @@ fun HomeScreen(
     uiState: SoundWaveUiState,
     onFilterSelected: (String) -> Unit,
     onTrackClick: (TrackItem) -> Unit,
+    onPlayAll: () -> Unit,
     onTrackLikeToggle: (String) -> Unit,
     onAlbumClick: (AlbumItem) -> Unit,
     onPlaylistClick: (PlaylistItem) -> Unit,
     onOpenEqualizer: () -> Unit,
-    onOpenExplore: () -> Unit
+    onOpenExplore: () -> Unit,
+    onOpenServerLogin: () -> Unit,
+    onRetry: () -> Unit,
+    onTrackMenu: (TrackItem) -> Unit = {}
 ) {
-    val filters = listOf("All", "Energize", "Workout", "Relax", "Commute", "Focus")
+    val filters = listOf("Všetko") + uiState.homeGenres
+    val hasContent = uiState.homeQuickPicks.isNotEmpty() ||
+        uiState.homeListenAgain.isNotEmpty() ||
+        uiState.homeNewest.isNotEmpty() ||
+        uiState.libraryPlaylists.isNotEmpty()
 
     LazyColumn(
         modifier = Modifier
@@ -90,222 +97,317 @@ fun HomeScreen(
         contentPadding = PaddingValues(bottom = 160.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        // Filter Chips Carousel
-        item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                filters.forEach { filter ->
-                    val isSelected = uiState.homeFilter == filter
-                    Box(
-                        modifier = Modifier
-                            .height(34.dp)
-                            .clip(RoundedCornerShape(50))
-                            .background(if (isSelected) SurfaceBright else SurfaceContainerHigh)
-                            .clickable { onFilterSelected(filter) }
-                            .padding(horizontal = 18.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = filter,
-                            color = OnSurface,
-                            fontSize = 13.sp,
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold
-                        )
+        // Filter Chips Carousel (genres from the server)
+        if (filters.size > 1) {
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState())
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    filters.forEach { filter ->
+                        val isSelected = uiState.homeFilter == filter
+                        Box(
+                            modifier = Modifier
+                                .height(34.dp)
+                                .clip(RoundedCornerShape(50))
+                                .background(if (isSelected) SurfaceBright else SurfaceContainerHigh)
+                                .clickable { onFilterSelected(filter) }
+                                .padding(horizontal = 18.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = filter,
+                                color = OnSurface,
+                                fontSize = 13.sp,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold
+                            )
+                        }
                     }
                 }
             }
         }
 
-        // SECTION 1: START RADIO FROM A SONG / Quick picks
-        item {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Row(
+        // Empty / loading / error state
+        if (!hasContent) {
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 48.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    val message = when {
+                        !uiState.isLoggedIn -> "Pripoj aplikáciu k svojmu Navidrome serveru a uvidíš tu svoju hudbu."
+                        uiState.homeLoading -> "Načítavam knižnicu…"
+                        uiState.homeError != null -> uiState.homeError
+                        else -> "Knižnica je zatiaľ prázdna. Skontroluj, či má server naskenované skladby."
+                    }
+                    Text(
+                        text = message ?: "",
+                        color = OnSurfaceVariant,
+                        fontSize = 14.sp
+                    )
+                    if (!uiState.isLoggedIn) {
+                        HomeActionButton(text = "Pripojiť k Navidrome", onClick = onOpenServerLogin)
+                    } else if (!uiState.homeLoading) {
+                        HomeActionButton(text = "Skúsiť znova", onClick = onRetry)
+                    }
+                }
+            }
+        }
+
+        // SECTION 1: Quick picks (random songs from the server)
+        if (uiState.homeQuickPicks.isNotEmpty()) {
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Bottom
+                    ) {
+                        Column {
+                            Text(
+                                text = "SPUSTIŤ RÁDIO ZO SKLADBY",
+                                color = Primary,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 1.sp
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = "Rýchly výber",
+                                color = OnSurface,
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = (-0.4).sp
+                            )
+                        }
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(50))
+                                .background(SurfaceContainerHigh)
+                                .clickable { onPlayAll() }
+                                .padding(horizontal = 16.dp, vertical = 6.dp)
+                                .testTag("home_play_all_btn")
+                        ) {
+                            Text(
+                                text = "Prehrať všetko",
+                                color = OnSurface,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
+                    }
+
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        uiState.homeQuickPicks.forEach { track ->
+                            val isActive = uiState.currentTrack.id == track.id
+                            val isLiked = track.id in uiState.likedTrackIds
+                            QuickPickTrackRow(
+                                track = track,
+                                isActive = isActive,
+                                isLiked = isLiked,
+                                onClick = { onTrackClick(track) },
+                                onLikeClick = { onTrackLikeToggle(track.id) },
+                                onMenuClick = { onTrackMenu(track) }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        // SECTION 2: Listen again (recently played albums)
+        if (uiState.homeListenAgain.isNotEmpty()) {
+            item {
+                HomeAlbumSection(
+                    kicker = "OBJAV VIAC",
+                    kickerColor = Secondary,
+                    title = "Počúvať znova",
+                    albums = uiState.homeListenAgain,
+                    onAlbumClick = onAlbumClick,
+                    actionIcon = Icons.AutoMirrored.Filled.ArrowForward,
+                    actionDescription = "Objavuj",
+                    onAction = onOpenExplore
+                )
+            }
+        }
+
+        // SECTION 3: Newly added albums
+        if (uiState.homeNewest.isNotEmpty()) {
+            item {
+                HomeAlbumSection(
+                    kicker = "NOVINKY V KNIŽNICI",
+                    kickerColor = Primary,
+                    title = "Nedávno pridané",
+                    albums = uiState.homeNewest,
+                    onAlbumClick = onAlbumClick,
+                    actionIcon = Icons.AutoMirrored.Filled.ArrowForward,
+                    actionDescription = "Objavuj",
+                    onAction = onOpenExplore
+                )
+            }
+        }
+
+        // SECTION 4: Playlists
+        if (uiState.libraryPlaylists.isNotEmpty()) {
+            item {
+                Column(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Bottom
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
-                    Column {
-                        Text(
-                            text = "START RADIO FROM A SONG",
-                            color = Primary,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp
-                        )
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
-                            text = "Quick picks",
-                            color = OnSurface,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = (-0.4).sp
-                        )
-                    }
-                    Box(
+                    Row(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(50))
-                            .background(SurfaceContainerHigh)
-                            .clickable {
-                                onTrackClick(SoundWaveCatalog.homeQuickPicks.first())
-                            }
-                            .padding(horizontal = 16.dp, vertical = 6.dp)
-                            .testTag("home_play_all_btn")
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = "Play all",
-                            color = OnSurface,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
+                        Column {
+                            Text(
+                                text = "ZO SERVERA",
+                                color = Tertiary,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 1.sp
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = "Tvoje playlisty",
+                                color = OnSurface,
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = (-0.4).sp
+                            )
+                        }
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(CircleShape)
+                                .background(SurfaceContainer)
+                                .clickable { onOpenEqualizer() }
+                                .testTag("home_tune_button"),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Tune,
+                                contentDescription = "Ekvalizér",
+                                tint = OnSurface,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
                     }
-                }
 
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    SoundWaveCatalog.homeQuickPicks.forEach { track ->
-                        val isActive = uiState.currentTrack.title == track.title
-                        val isLiked = track.id in uiState.likedTrackIds
-                        QuickPickTrackRow(
-                            track = track,
-                            isActive = isActive,
-                            isLiked = isLiked,
-                            onClick = { onTrackClick(track) },
-                            onLikeClick = { onTrackLikeToggle(track.id) }
-                        )
+                    LazyRow(
+                        contentPadding = PaddingValues(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(uiState.libraryPlaylists, key = { it.id }) { mix ->
+                            MixedForYouCard(
+                                playlist = mix,
+                                onClick = { onPlaylistClick(mix) }
+                            )
+                        }
                     }
                 }
             }
         }
+    }
+}
 
-        // SECTION 2: DISCOVER MORE / Listen again
-        item {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(14.dp)
+@Composable
+private fun HomeActionButton(text: String, onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(50))
+            .background(PrimaryContainer)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 22.dp, vertical = 10.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            color = OnPrimary,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+private fun HomeAlbumSection(
+    kicker: String,
+    kickerColor: Color,
+    title: String,
+    albums: List<AlbumItem>,
+    onAlbumClick: (AlbumItem) -> Unit,
+    actionIcon: androidx.compose.ui.graphics.vector.ImageVector,
+    actionDescription: String,
+    onAction: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(
+                    text = kicker,
+                    color = kickerColor,
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.sp
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = title,
+                    color = OnSurface,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = (-0.4).sp
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .background(SurfaceContainer)
+                    .clickable { onAction() },
+                contentAlignment = Alignment.Center
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column {
-                        Text(
-                            text = "DISCOVER MORE",
-                            color = Secondary,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp
-                        )
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
-                            text = "Listen again",
-                            color = OnSurface,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = (-0.4).sp
-                        )
-                    }
-                    Box(
-                        modifier = Modifier
-                            .size(36.dp)
-                            .clip(CircleShape)
-                            .background(SurfaceContainer)
-                            .clickable { onOpenExplore() },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                            contentDescription = "Explore",
-                            tint = OnSurface,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                }
-
-                LazyRow(
-                    contentPadding = PaddingValues(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(SoundWaveCatalog.homeListenAgain, key = { it.id }) { album ->
-                        ListenAgainAlbumCard(
-                            album = album,
-                            onClick = { onAlbumClick(album) }
-                        )
-                    }
-                }
+                Icon(
+                    imageVector = actionIcon,
+                    contentDescription = actionDescription,
+                    tint = OnSurface,
+                    modifier = Modifier.size(20.dp)
+                )
             }
         }
 
-        // SECTION 3: CURATED JUST FOR YOU / Mixed for you
-        item {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(14.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column {
-                        Text(
-                            text = "CURATED JUST FOR YOU",
-                            color = Tertiary,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp
-                        )
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
-                            text = "Mixed for you",
-                            color = OnSurface,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = (-0.4).sp
-                        )
-                    }
-                    Box(
-                        modifier = Modifier
-                            .size(36.dp)
-                            .clip(CircleShape)
-                            .background(SurfaceContainer)
-                            .clickable { onOpenEqualizer() }
-                            .testTag("home_tune_button"),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Tune,
-                            contentDescription = "Equalizer",
-                            tint = OnSurface,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                }
-
-                LazyRow(
-                    contentPadding = PaddingValues(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(SoundWaveCatalog.homeMixedForYou, key = { it.id }) { mix ->
-                        MixedForYouCard(
-                            playlist = mix,
-                            onClick = { onPlaylistClick(mix) }
-                        )
-                    }
-                }
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(albums, key = { it.id }) { album ->
+                ListenAgainAlbumCard(
+                    album = album,
+                    onClick = { onAlbumClick(album) }
+                )
             }
         }
     }
@@ -317,7 +419,8 @@ private fun QuickPickTrackRow(
     isActive: Boolean,
     isLiked: Boolean,
     onClick: () -> Unit,
-    onLikeClick: () -> Unit
+    onLikeClick: () -> Unit,
+    onMenuClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -405,18 +508,18 @@ private fun QuickPickTrackRow(
             ) {
                 Icon(
                     imageVector = if (isLiked) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
-                    contentDescription = "Like",
+                    contentDescription = "Páči sa mi to",
                     tint = if (isLiked) Primary else OnSurfaceVariant,
                     modifier = Modifier.size(20.dp)
                 )
             }
             IconButton(
-                onClick = onClick,
+                onClick = onMenuClick,
                 modifier = Modifier.size(40.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.MoreVert,
-                    contentDescription = "More",
+                    contentDescription = "Viac možností",
                     tint = OnSurfaceVariant,
                     modifier = Modifier.size(20.dp)
                 )
@@ -459,7 +562,7 @@ private fun ListenAgainAlbumCard(
             ) {
                 Icon(
                     imageVector = Icons.Default.PlayArrow,
-                    contentDescription = "Play ${album.title}",
+                    contentDescription = "Prehrať ${album.title}",
                     tint = OnPrimary,
                     modifier = Modifier.size(22.dp)
                 )
@@ -569,14 +672,9 @@ private fun MixedForYouCard(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                    val subColor = when (playlist.id) {
-                        "mix_supermix" -> Secondary
-                        "mix_night_drive" -> Primary
-                        else -> Tertiary
-                    }
                     Text(
                         text = playlist.subtitle,
-                        color = subColor,
+                        color = Tertiary,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold
                     )

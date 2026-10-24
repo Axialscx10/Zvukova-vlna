@@ -106,6 +106,11 @@ dependencies {
   // implementation(libs.androidx.room.ktx)
   // implementation(libs.androidx.room.runtime)
   implementation(libs.coil.compose)
+  // Audio playback (ExoPlayer) + MediaSession for background playback, notification and lock screen.
+  implementation(libs.androidx.media3.exoplayer)
+  implementation(libs.androidx.media3.session)
+  // Media3 exposes Guava types (ListenableFuture) in its public API.
+  implementation("com.google.guava:guava:33.4.0-android")
   // implementation(libs.converter.moshi)
   // implementation(libs.firebase.ai)
   // Uncomment to use Firestore:

@@ -1,6 +1,6 @@
 {
   "name": "SoundWave",
-  "description": "Audiophile Navidrome & Subsonic Hi-Res Music Streaming Client with 10-band DSP Equalizer and AutoEQ calibration.",
+  "description": "Audiofilský streamovací klient pre Navidrome & Subsonic s Hi-Res prehrávaním, 10-pásmovým DSP ekvalizérom a AutoEQ kalibráciou.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

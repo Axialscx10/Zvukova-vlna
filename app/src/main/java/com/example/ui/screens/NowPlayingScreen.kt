@@ -25,9 +25,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
 import androidx.compose.material.icons.automirrored.filled.QueueMusic
+import androidx.compose.material.icons.filled.Bedtime
+import androidx.compose.material.icons.filled.ClearAll
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Devices
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.DownloadDone
 import androidx.compose.material.icons.filled.GraphicEq
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.RepeatOne
@@ -36,9 +43,11 @@ import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material.icons.outlined.ThumbDown
 import androidx.compose.material.icons.outlined.ThumbUp
+import com.example.data.SleepTimerOption
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -61,7 +70,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.data.SoundWaveCatalog
+import com.example.data.TrackItem
+import com.example.data.formatMs
 import com.example.ui.SoundWaveUiState
 import com.example.ui.components.AnimatedEqualizerBars
 import com.example.ui.components.NetImage
@@ -93,9 +103,20 @@ fun NowPlayingScreen(
     onLyricLineClick: (Int) -> Unit,
     onOpenEqualizer: () -> Unit,
     onOpenArtistDetail: () -> Unit,
-    onOpenStreamingSettings: () -> Unit
+    onOpenStreamingSettings: () -> Unit,
+    onQueueItemClick: (Int) -> Unit,
+    onRelatedClick: (TrackItem) -> Unit,
+    onOpenSleepTimer: () -> Unit = {},
+    onDownloadCurrentTrack: () -> Unit = {},
+    onShareTrack: (TrackItem) -> Unit = {},
+    onOpenTrackMenu: (TrackItem) -> Unit = {},
+    onRemoveFromQueue: (Int) -> Unit = {},
+    onClearUpcomingQueue: () -> Unit = {}
 ) {
     val isLiked = uiState.currentTrack.id in uiState.likedTrackIds
+    val isDownloaded = uiState.currentTrack.id in uiState.downloadedTrackIds
+    val isDownloading = uiState.currentTrack.id in uiState.downloadingTrackIds
+    val isTimerActive = uiState.sleepTimerOption != SleepTimerOption.OFF
     val waveformHeights = remember {
         listOf(
             0.25f, 0.45f, 0.62f, 0.50f, 0.80f, 1.0f, 0.62f, 0.88f, 0.75f, 0.55f,
@@ -104,13 +125,6 @@ fun NowPlayingScreen(
             0.55f, 0.38f, 0.62f, 0.75f, 0.50f, 0.32f
         )
     }
-
-    val lyricsLines = listOf(
-        "I see you, you see me",
-        "How pleasant, this feeling",
-        "The whisperings, the dancing",
-        "So sweet, so soft..."
-    )
 
     LazyColumn(
         modifier = Modifier
@@ -154,38 +168,42 @@ fun NowPlayingScreen(
                     Text(
                         text = buildAnnotatedString {
                             withStyle(SpanStyle(color = OnSurfaceVariant)) {
-                                append("Playing from ")
+                                append("Prehráva sa z: ")
                             }
                             withStyle(SpanStyle(color = OnSurface, fontWeight = FontWeight.SemiBold)) {
-                                append("Quick picks")
+                                append(uiState.playingFrom.ifBlank { "Navidrome" })
                             }
                         },
                         fontSize = 12.sp
                     )
                 }
 
-                Row(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(50))
-                        .background(SurfaceContainerHigh.copy(alpha = 0.85f))
-                        .clickable { onOpenStreamingSettings() }
-                        .padding(horizontal = 10.dp, vertical = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Box(
+                if (uiState.currentTrack.techLine.isNotBlank()) {
+                    Row(
                         modifier = Modifier
-                            .size(6.dp)
-                            .clip(CircleShape)
-                            .background(SecondaryFixedDim)
-                    )
-                    Text(
-                        text = "LOSSLESS 24-bit / 96kHz",
-                        color = Secondary,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 0.4.sp
-                    )
+                            .clip(RoundedCornerShape(50))
+                            .background(SurfaceContainerHigh.copy(alpha = 0.85f))
+                            .clickable { onOpenStreamingSettings() }
+                            .padding(horizontal = 10.dp, vertical = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(6.dp)
+                                .clip(CircleShape)
+                                .background(SecondaryFixedDim)
+                        )
+                        Text(
+                            text = uiState.currentTrack.techLine.uppercase(),
+                            color = Secondary,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 0.4.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
             }
         }
@@ -207,13 +225,8 @@ fun NowPlayingScreen(
                         .clip(RoundedCornerShape(20.dp))
                         .background(SurfaceContainerLowest)
                 ) {
-                    val artworkUrl = if (uiState.currentTrack.title == "After Dark") {
-                        SoundWaveCatalog.NOW_PLAYING_ARTWORK_URL
-                    } else {
-                        uiState.currentTrack.imageUrl
-                    }
                     NetImage(
-                        url = artworkUrl,
+                        url = uiState.currentTrack.imageUrl,
                         contentDescription = uiState.currentTrack.title,
                         modifier = Modifier.fillMaxSize()
                     )
@@ -230,30 +243,34 @@ fun NowPlayingScreen(
                             )
                     )
 
-                    // Floating Dolby Atmos Chip
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(12.dp)
-                            .clip(RoundedCornerShape(50))
-                            .background(SurfaceContainerLowest.copy(alpha = 0.85f))
-                            .padding(horizontal = 10.dp, vertical = 5.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        AnimatedEqualizerBars(
-                            barColor = Primary,
-                            secondaryBarColor = SecondaryFixedDim,
-                            barWidth = 2.dp,
-                            maxHeight = 12.dp
-                        )
-                        Text(
-                            text = "DOLBY ATMOS",
-                            color = OnSurface,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 0.6.sp
-                        )
+                    // Floating format chip (real file format of the playing track)
+                    if (uiState.currentTrack.badge.isNotBlank()) {
+                        Row(
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(12.dp)
+                                .clip(RoundedCornerShape(50))
+                                .background(SurfaceContainerLowest.copy(alpha = 0.85f))
+                                .padding(horizontal = 10.dp, vertical = 5.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            if (uiState.isPlaying) {
+                                AnimatedEqualizerBars(
+                                    barColor = Primary,
+                                    secondaryBarColor = SecondaryFixedDim,
+                                    barWidth = 2.dp,
+                                    maxHeight = 12.dp
+                                )
+                            }
+                            Text(
+                                text = uiState.currentTrack.badge,
+                                color = OnSurface,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 0.6.sp
+                            )
+                        }
                     }
                 }
 
@@ -290,63 +307,68 @@ fun NowPlayingScreen(
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
-                            Icon(
-                                imageVector = Icons.Default.Verified,
-                                contentDescription = "Verified",
-                                tint = SecondaryFixedDim,
-                                modifier = Modifier.size(16.dp)
-                            )
                         }
                     }
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(2.dp)
+                        horizontalArrangement = Arrangement.spacedBy(0.dp)
                     ) {
                         IconButton(
                             onClick = onToggleLike,
                             modifier = Modifier
-                                .size(40.dp)
+                                .size(38.dp)
                                 .testTag("now_playing_like_btn")
                         ) {
                             Icon(
                                 imageVector = if (isLiked) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
-                                contentDescription = "Like",
+                                contentDescription = "Páči sa mi to",
                                 tint = if (isLiked) PrimaryContainer else OnSurfaceVariant,
-                                modifier = Modifier.size(22.dp)
+                                modifier = Modifier.size(20.dp)
                             )
                         }
                         IconButton(
-                            onClick = {},
-                            modifier = Modifier.size(40.dp)
+                            onClick = onOpenSleepTimer,
+                            modifier = Modifier.size(38.dp)
                         ) {
                             Icon(
-                                imageVector = Icons.Outlined.ThumbDown,
-                                contentDescription = "Dislike",
-                                tint = OnSurfaceVariant,
-                                modifier = Modifier.size(22.dp)
+                                imageVector = Icons.Default.Bedtime,
+                                contentDescription = "Časovač spánku",
+                                tint = if (isTimerActive) PrimaryContainer else OnSurfaceVariant,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                        IconButton(
+                            onClick = onDownloadCurrentTrack,
+                            modifier = Modifier.size(38.dp)
+                        ) {
+                            Icon(
+                                imageVector = if (isDownloaded) Icons.Default.DownloadDone else if (isDownloading) Icons.Default.DownloadDone else Icons.Default.Download,
+                                contentDescription = if (isDownloaded) "Stiahnuté" else "Stiahnuť",
+                                tint = if (isDownloaded) SecondaryFixed else if (isDownloading) PrimaryContainer else OnSurfaceVariant,
+                                modifier = Modifier.size(20.dp)
                             )
                         }
                         IconButton(
                             onClick = onOpenEqualizer,
-                            modifier = Modifier.size(40.dp)
+                            modifier = Modifier.size(38.dp)
                         ) {
                             Icon(
-                                imageVector = Icons.AutoMirrored.Filled.PlaylistAdd,
-                                contentDescription = "Add to playlist",
+                                imageVector = Icons.Default.Tune,
+                                contentDescription = "Ekvalizér",
                                 tint = OnSurfaceVariant,
-                                modifier = Modifier.size(24.dp)
+                                modifier = Modifier.size(20.dp)
                             )
                         }
                         IconButton(
-                            onClick = {},
-                            modifier = Modifier.size(40.dp)
+                            onClick = { onOpenTrackMenu(uiState.currentTrack) },
+                            modifier = Modifier.size(38.dp)
                         ) {
                             Icon(
-                                imageVector = Icons.Default.Share,
-                                contentDescription = "Share",
+                                imageVector = Icons.Default.MoreVert,
+                                contentDescription = "Viac možností",
                                 tint = OnSurfaceVariant,
-                                modifier = Modifier.size(21.dp)
+                                modifier = Modifier.size(20.dp)
                             )
                         }
                     }
@@ -421,14 +443,14 @@ fun NowPlayingScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "1:42",
+                            text = formatMs(uiState.positionMs),
                             color = OnSurfaceVariant,
                             fontSize = 12.sp,
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.SemiBold
                         )
                         Text(
-                            text = "-2:36",
+                            text = "-" + formatMs((uiState.durationMs - uiState.positionMs).coerceAtLeast(0L)),
                             color = OnSurfaceVariant,
                             fontSize = 12.sp,
                             fontFamily = FontFamily.Monospace,
@@ -457,7 +479,7 @@ fun NowPlayingScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Shuffle,
-                            contentDescription = "Shuffle",
+                            contentDescription = "Náhodné prehrávanie",
                             tint = if (uiState.isShuffleEnabled) PrimaryContainer else OnSurfaceVariant,
                             modifier = Modifier.size(24.dp)
                         )
@@ -480,7 +502,7 @@ fun NowPlayingScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.SkipPrevious,
-                            contentDescription = "Previous",
+                            contentDescription = "Predchádzajúca skladba",
                             tint = OnSurface,
                             modifier = Modifier.size(34.dp)
                         )
@@ -499,7 +521,7 @@ fun NowPlayingScreen(
                     ) {
                         Icon(
                             imageVector = if (uiState.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                            contentDescription = if (uiState.isPlaying) "Pause" else "Play",
+                            contentDescription = if (uiState.isPlaying) "Pozastaviť" else "Prehrať",
                             tint = Color.White,
                             modifier = Modifier.size(36.dp)
                         )
@@ -512,7 +534,7 @@ fun NowPlayingScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.SkipNext,
-                            contentDescription = "Next",
+                            contentDescription = "Ďalšia skladba",
                             tint = OnSurface,
                             modifier = Modifier.size(34.dp)
                         )
@@ -525,7 +547,7 @@ fun NowPlayingScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.RepeatOne,
-                            contentDescription = "Repeat One",
+                            contentDescription = "Opakovať skladbu",
                             tint = if (uiState.isRepeatOne) PrimaryContainer else OnSurfaceVariant,
                             modifier = Modifier.size(24.dp)
                         )
@@ -544,7 +566,7 @@ fun NowPlayingScreen(
                         modifier = Modifier
                             .clip(RoundedCornerShape(50))
                             .background(SurfaceContainer.copy(alpha = 0.75f))
-                            .clickable { onOpenEqualizer() }
+                            .clickable { onOpenStreamingSettings() }
                             .padding(horizontal = 12.dp, vertical = 7.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -556,7 +578,7 @@ fun NowPlayingScreen(
                             modifier = Modifier.size(18.dp)
                         )
                         Text(
-                            text = "Living Room Beats (Hi-Fi)",
+                            text = if (uiState.isLoggedIn) uiState.serverHost else "Server nepripojený",
                             color = OnSurface,
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Bold
@@ -568,12 +590,12 @@ fun NowPlayingScreen(
                             .size(36.dp)
                             .clip(CircleShape)
                             .background(SurfaceContainer.copy(alpha = 0.75f))
-                            .clickable { onOpenEqualizer() },
+                            .clickable { onTabSelected("NASLEDUJÚCE") },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.QueueMusic,
-                            contentDescription = "Queue / DSP",
+                            contentDescription = "Fronta",
                             tint = OnSurfaceVariant,
                             modifier = Modifier.size(20.dp)
                         )
@@ -599,8 +621,11 @@ fun NowPlayingScreen(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    listOf("UP NEXT", "LYRICS", "RELATED").forEach { tab ->
-                        val isSelected = uiState.nowPlayingTab == tab
+                    listOf("NASLEDUJÚCE", "TEXT", "PODOBNÉ").forEach { tab ->
+                        val isSelected = uiState.nowPlayingTab == tab ||
+                            (tab == "NASLEDUJÚCE" && uiState.nowPlayingTab == "UP NEXT") ||
+                            (tab == "TEXT" && uiState.nowPlayingTab == "LYRICS") ||
+                            (tab == "PODOBNÉ" && uiState.nowPlayingTab == "RELATED")
                         Row(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(50))
@@ -610,7 +635,7 @@ fun NowPlayingScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
-                            if (tab == "LYRICS") {
+                            if (tab == "TEXT") {
                                 Box(
                                     modifier = Modifier
                                         .size(6.dp)
@@ -650,14 +675,136 @@ fun NowPlayingScreen(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    lyricsLines.forEachIndexed { idx, line ->
-                        val isCurrentLine = uiState.activeLyricIndex == idx
+                    NowPlayingDrawerContent(
+                        uiState = uiState,
+                        onLyricLineClick = onLyricLineClick,
+                        onQueueItemClick = onQueueItemClick,
+                        onRelatedClick = onRelatedClick,
+                        onRemoveFromQueue = onRemoveFromQueue,
+                        onClearUpcomingQueue = onClearUpcomingQueue,
+                        onOpenTrackMenu = onOpenTrackMenu
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun NowPlayingDrawerContent(
+    uiState: SoundWaveUiState,
+    onLyricLineClick: (Int) -> Unit,
+    onQueueItemClick: (Int) -> Unit,
+    onRelatedClick: (TrackItem) -> Unit,
+    onRemoveFromQueue: (Int) -> Unit,
+    onClearUpcomingQueue: () -> Unit,
+    onOpenTrackMenu: (TrackItem) -> Unit
+) {
+    when (uiState.nowPlayingTab) {
+        "NASLEDUJÚCE", "UP NEXT" -> {
+            val startIdx = (uiState.queueIndex + 1).coerceAtLeast(0)
+            val upcoming = uiState.queue.drop(startIdx).take(50)
+            if (upcoming.isEmpty()) {
+                DrawerHint("Fronta je prázdna. Spusti album alebo playlist a ďalšie skladby sa zobrazia tu.")
+            } else {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Nasledujúce v poradí (${upcoming.size})",
+                        color = OnSurface,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Row(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(SurfaceContainerHighest)
+                            .clickable { onClearUpcomingQueue() }
+                            .padding(horizontal = 10.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ClearAll,
+                            contentDescription = "Vyčistiť",
+                            tint = Primary,
+                            modifier = Modifier.size(16.dp)
+                        )
                         Text(
-                            text = line,
+                            text = "Vyčistiť",
+                            color = Primary,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                }
+
+                upcoming.forEachIndexed { offset, track ->
+                    val queueIndex = startIdx + offset
+                    DrawerTrackRow(
+                        track = track,
+                        onClick = { onQueueItemClick(queueIndex) },
+                        onRemove = { onRemoveFromQueue(queueIndex) },
+                        onMenuClick = { onOpenTrackMenu(track) }
+                    )
+                }
+                if (uiState.isShuffleEnabled) {
+                    DrawerHint("Náhodné poradie je zapnuté – ďalšia skladba sa môže líšiť od poradia vo fronte.")
+                }
+            }
+        }
+        "PODOBNÉ", "RELATED" -> {
+            when {
+                uiState.relatedLoading -> DrawerHint("Hľadám podobné skladby…")
+                uiState.relatedTracks.isEmpty() -> DrawerHint("Server nenašiel podobné skladby.")
+                else -> uiState.relatedTracks.forEach { track ->
+                    DrawerTrackRow(
+                        track = track,
+                        onClick = { onRelatedClick(track) },
+                        onRemove = null,
+                        onMenuClick = { onOpenTrackMenu(track) }
+                    )
+                }
+            }
+        }
+        else -> {
+            val lines = uiState.lyrics
+            when {
+                uiState.lyricsLoading -> DrawerHint("Načítavam text…")
+                lines.isEmpty() -> DrawerHint("K tejto skladbe nie je na serveri dostupný text.")
+                lines.first().startMs < 0 -> {
+                    // Plain (unsynced) lyrics
+                    lines.take(120).forEach { line ->
+                        Text(
+                            text = line.text,
+                            color = OnSurface,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 5.dp)
+                        )
+                    }
+                }
+                else -> {
+                    // Synced lyrics: show a window around the active line
+                    val active = uiState.activeLyricIndex
+                    val from = (active - 2).coerceAtLeast(0)
+                    val to = (maxOf(active, 0) + 4).coerceAtMost(lines.lastIndex)
+                    for (idx in from..to) {
+                        val isCurrentLine = active == idx
+                        Text(
+                            text = lines[idx].text,
                             color = when {
                                 isCurrentLine -> Color.White
-                                idx < uiState.activeLyricIndex -> OnSurfaceVariant.copy(alpha = 0.42f)
-                                idx == uiState.activeLyricIndex + 1 -> OnSurfaceVariant.copy(alpha = 0.65f)
+                                idx < active -> OnSurfaceVariant.copy(alpha = 0.42f)
+                                idx == active + 1 -> OnSurfaceVariant.copy(alpha = 0.65f)
                                 else -> OnSurfaceVariant.copy(alpha = 0.32f)
                             },
                             fontSize = if (isCurrentLine) 20.sp else 16.sp,
@@ -669,31 +816,97 @@ fun NowPlayingScreen(
                                 .padding(vertical = 8.dp)
                         )
                     }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        modifier = Modifier.clickable {
-                            onLyricLineClick((uiState.activeLyricIndex + 1) % lyricsLines.size)
-                        }
-                    ) {
-                        Text(
-                            text = "SWIPE UP FOR FULL SCREEN LYRICS",
-                            color = OnSurfaceVariant.copy(alpha = 0.75f),
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 0.8.sp
-                        )
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowUp,
-                            contentDescription = null,
-                            tint = OnSurfaceVariant.copy(alpha = 0.75f),
-                            modifier = Modifier.size(18.dp)
-                        )
-                    }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DrawerHint(text: String) {
+    Text(
+        text = text,
+        color = OnSurfaceVariant,
+        fontSize = 13.sp,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp)
+    )
+}
+
+@Composable
+private fun DrawerTrackRow(
+    track: TrackItem,
+    onClick: () -> Unit,
+    onRemove: (() -> Unit)? = null,
+    onMenuClick: (() -> Unit)? = null
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(10.dp))
+            .clickable(onClick = onClick)
+            .padding(vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(44.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(SurfaceContainerHighest)
+        ) {
+            NetImage(
+                url = track.imageUrl,
+                contentDescription = track.title,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = track.title,
+                color = OnSurface,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = track.artist,
+                color = OnSurfaceVariant,
+                fontSize = 12.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        Text(text = track.duration, color = OnSurfaceVariant, fontSize = 12.sp)
+
+        if (onMenuClick != null) {
+            IconButton(
+                onClick = onMenuClick,
+                modifier = Modifier.size(32.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = "Možnosti",
+                    tint = OnSurfaceVariant,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
+        }
+
+        if (onRemove != null) {
+            IconButton(
+                onClick = onRemove,
+                modifier = Modifier.size(32.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Odstrániť z fronty",
+                    tint = OnSurfaceVariant,
+                    modifier = Modifier.size(18.dp)
+                )
             }
         }
     }

@@ -1,10 +1,16 @@
 package com.example
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
@@ -16,20 +22,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.data.AppScreen
-import com.example.ui.SoundWaveUiState
 import com.example.ui.SoundWaveViewModel
 import com.example.ui.components.GlassMiniPlayerDock
 import com.example.ui.components.QuickScreenSwitcherModal
+import com.example.ui.components.SleepTimerBottomSheet
 import com.example.ui.components.SoundWaveBottomNavBar
 import com.example.ui.components.SoundWaveMainTopBar
 import com.example.ui.components.StackTopBar
-import com.example.ui.screens.ArtistDetailScreen
+import com.example.ui.components.TrackActionsBottomSheet
 import com.example.ui.screens.EqualizerScreen
 import com.example.ui.screens.ExploreScreen
 import com.example.ui.screens.HomeScreen
@@ -61,13 +70,46 @@ fun SoundWaveApp(
     viewModel: SoundWaveViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    // Android 13+ needs a runtime permission for the playback notification (lock screen controls).
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { }
+    LaunchedEffect(Unit) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
+
+    // One-shot messages (errors, confirmations) from the ViewModel
+    LaunchedEffect(uiState.message) {
+        uiState.message?.let {
+            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+            viewModel.consumeMessage()
+        }
+    }
+
+    val hasTrack = uiState.currentTrack.id.isNotBlank()
 
     BackHandler(
-        enabled = uiState.currentScreen != AppScreen.HOME ||
+        enabled = (uiState.currentScreen != AppScreen.HOME &&
+            !(uiState.currentScreen == AppScreen.SERVER_LOGIN && !uiState.isLoggedIn)) ||
             uiState.showAutoEqModal ||
-            uiState.showScreenSwitcherSheet
+            uiState.showScreenSwitcherSheet ||
+            uiState.showSleepTimerModal ||
+            uiState.trackMenuTarget != null
     ) {
-        viewModel.navigateBack()
+        when {
+            uiState.showSleepTimerModal -> viewModel.setShowSleepTimerModal(false)
+            uiState.trackMenuTarget != null -> viewModel.setTrackMenuTarget(null)
+            uiState.showScreenSwitcherSheet -> viewModel.setShowScreenSwitcherSheet(false)
+            uiState.showAutoEqModal -> viewModel.setShowAutoEqModal(false)
+            else -> viewModel.navigateBack()
+        }
     }
 
     val isMainTabScreen = uiState.currentScreen in setOf(
@@ -117,7 +159,7 @@ fun SoundWaveApp(
                 }
                 AppScreen.SERVER_LOGIN -> {
                     StackTopBar(
-                        title = "Server Login",
+                        title = "Prihlásenie na server",
                         showLogo = true,
                         onBackClick = { viewModel.navigateBack() },
                         onMoreClick = { viewModel.setShowScreenSwitcherSheet(true) },
@@ -126,7 +168,11 @@ fun SoundWaveApp(
                 }
                 else -> {
                     StackTopBar(
-                        title = "Now Playing",
+                        title = when (uiState.currentScreen) {
+                            AppScreen.PLAYLIST_DETAIL -> uiState.detail?.kind ?: "Detail"
+                            AppScreen.UPGRADE_STREAMING -> "Kvalita streamovania"
+                            else -> "Práve hrá"
+                        },
                         showLogo = true,
                         onBackClick = { viewModel.navigateBack() },
                         onMoreClick = { viewModel.setShowScreenSwitcherSheet(true) },
@@ -144,13 +190,24 @@ fun SoundWaveApp(
                                 uiState = uiState,
                                 onFilterSelected = { viewModel.setHomeFilter(it) },
                                 onTrackClick = { track ->
-                                    viewModel.playTrack(track, openFullPlayer = true)
+                                    viewModel.playTrack(
+                                        track,
+                                        openFullPlayer = true,
+                                        context = uiState.homeQuickPicks,
+                                        from = "Rýchly výber"
+                                    )
+                                },
+                                onPlayAll = {
+                                    viewModel.playAll(uiState.homeQuickPicks, shuffle = false, from = "Rýchly výber")
                                 },
                                 onTrackLikeToggle = { viewModel.toggleTrackLike(it) },
-                                onAlbumClick = { viewModel.navigateTo(AppScreen.ARTIST_DETAIL) },
-                                onPlaylistClick = { viewModel.navigateTo(AppScreen.PLAYLIST_DETAIL) },
+                                onAlbumClick = { viewModel.openCollection(it.id) },
+                                onPlaylistClick = { viewModel.openCollection(it.id) },
                                 onOpenEqualizer = { viewModel.navigateTo(AppScreen.EQUALIZER) },
-                                onOpenExplore = { viewModel.navigateTo(AppScreen.EXPLORE) }
+                                onOpenExplore = { viewModel.navigateTo(AppScreen.EXPLORE) },
+                                onOpenServerLogin = { viewModel.navigateTo(AppScreen.SERVER_LOGIN) },
+                                onRetry = { viewModel.loadHome() },
+                                onTrackMenu = { viewModel.setTrackMenuTarget(it) }
                             )
                         }
                         AppScreen.EXPLORE -> {
@@ -160,16 +217,22 @@ fun SoundWaveApp(
                                 onCategorySelected = { viewModel.setExploreCategory(it) },
                                 onToggleAudiophileFilter = { viewModel.toggleAudiophileFilter(it) },
                                 onResetAudiophileFilters = { viewModel.resetAudiophileFilters() },
-                                onOpenArtistDetail = { viewModel.navigateTo(AppScreen.ARTIST_DETAIL) },
-                                onToggleFollowArtist = { viewModel.toggleArtistFollow() },
-                                onTrackClick = { track ->
-                                    viewModel.playTrack(track, openFullPlayer = true)
+                                onTrackClick = { track, list ->
+                                    viewModel.playTrack(
+                                        track,
+                                        openFullPlayer = true,
+                                        context = list,
+                                        from = if (uiState.searchQuery.isBlank()) "Objavuj" else "Hľadanie: ${uiState.searchQuery}"
+                                    )
                                 },
                                 onTrackLikeToggle = { viewModel.toggleTrackLike(it) },
-                                onAlbumClick = { viewModel.navigateTo(AppScreen.ARTIST_DETAIL) },
-                                onArtistClick = { viewModel.navigateTo(AppScreen.ARTIST_DETAIL) },
+                                onAlbumClick = { viewModel.openCollection(it.id) },
+                                onArtistClick = { viewModel.openCollection(it.id) },
+                                onPlaylistClick = { viewModel.openCollection(it.id) },
+                                onGenreClick = { viewModel.openCollection("ge:" + it.name) },
                                 onScanServerClick = { viewModel.triggerServerScan() },
-                                onServerStatusClick = { viewModel.navigateTo(AppScreen.SERVER_LOGIN) }
+                                onServerStatusClick = { viewModel.navigateTo(AppScreen.SERVER_LOGIN) },
+                                onTrackMenu = { viewModel.setTrackMenuTarget(it) }
                             )
                         }
                         AppScreen.LIBRARY -> {
@@ -177,34 +240,58 @@ fun SoundWaveApp(
                                 uiState = uiState,
                                 onFilterChipSelected = { viewModel.setLibraryFilterChip(it) },
                                 onToggleGridView = { viewModel.toggleLibraryGridView() },
-                                onOpenPlaylistDetail = { viewModel.navigateTo(AppScreen.PLAYLIST_DETAIL) },
-                                onOpenArtistDetail = { viewModel.navigateTo(AppScreen.ARTIST_DETAIL) },
-                                onOpenExplore = { viewModel.navigateTo(AppScreen.EXPLORE) },
-                                onCreateNewPlaylist = { viewModel.createNewPlaylist() }
-                            )
-                        }
-                        AppScreen.ARTIST_DETAIL -> {
-                            ArtistDetailScreen(
-                                uiState = uiState,
-                                onFilterChipSelected = { viewModel.setArtistFilterChip(it) },
-                                onToggleFavoriteArtist = { viewModel.toggleArtistFavorite() },
-                                onToggleDownloadDiscography = { viewModel.toggleDiscographyDownload() },
-                                onTrackClick = { track ->
-                                    viewModel.playTrack(track, openFullPlayer = true)
+                                onOpenCollection = { viewModel.openCollection(it) },
+                                onTrackClick = { track, list ->
+                                    viewModel.playTrack(
+                                        track,
+                                        openFullPlayer = true,
+                                        context = list,
+                                        from = when (uiState.libraryFilterChip) {
+                                            "Stiahnuté" -> "Stiahnuté skladby"
+                                            "História" -> "História prehrávania"
+                                            else -> "Obľúbené"
+                                        }
+                                    )
                                 },
-                                onOpenStreamingSettings = { viewModel.navigateTo(AppScreen.UPGRADE_STREAMING) },
-                                onOpenExplore = { viewModel.navigateTo(AppScreen.EXPLORE) }
+                                onOpenExplore = { viewModel.navigateTo(AppScreen.EXPLORE) },
+                                onCreateNewPlaylist = { viewModel.createNewPlaylist(it) },
+                                onPlayRandomMix = { viewModel.playRandomMix() },
+                                onOpenServerLogin = { viewModel.navigateTo(AppScreen.SERVER_LOGIN) },
+                                onRetry = { viewModel.loadLibrary() },
+                                onPlayAll = { list, shuffle ->
+                                    viewModel.playAll(
+                                        list,
+                                        shuffle = shuffle,
+                                        from = if (uiState.libraryFilterChip == "História") "História prehrávania" else "Stiahnuté skladby"
+                                    )
+                                },
+                                onOpenTrackMenu = { viewModel.setTrackMenuTarget(it) },
+                                onClearDownloads = { viewModel.clearAllDownloads() },
+                                onClearHistory = { viewModel.clearHistory() }
                             )
                         }
                         AppScreen.PLAYLIST_DETAIL -> {
                             PlaylistDetailScreen(
                                 uiState = uiState,
-                                onTrackClick = { track ->
-                                    viewModel.playTrack(track, openFullPlayer = true)
+                                onTrackClick = { track, list ->
+                                    viewModel.playTrack(
+                                        track,
+                                        openFullPlayer = true,
+                                        context = list,
+                                        from = uiState.detail?.title.orEmpty()
+                                    )
+                                },
+                                onPlayAll = { shuffle ->
+                                    viewModel.playAll(
+                                        uiState.detail?.tracks.orEmpty(),
+                                        shuffle = shuffle,
+                                        from = uiState.detail?.title.orEmpty()
+                                    )
                                 },
                                 onTrackLikeToggle = { viewModel.toggleTrackLike(it) },
                                 onOpenExplore = { viewModel.navigateTo(AppScreen.EXPLORE) },
-                                onOpenStreamingSettings = { viewModel.navigateTo(AppScreen.UPGRADE_STREAMING) }
+                                onOpenStreamingSettings = { viewModel.navigateTo(AppScreen.UPGRADE_STREAMING) },
+                                onOpenTrackMenu = { viewModel.setTrackMenuTarget(it) }
                             )
                         }
                         AppScreen.NOW_PLAYING -> {
@@ -220,8 +307,28 @@ fun SoundWaveApp(
                                 onTabSelected = { viewModel.setNowPlayingTab(it) },
                                 onLyricLineClick = { viewModel.setActiveLyricIndex(it) },
                                 onOpenEqualizer = { viewModel.navigateTo(AppScreen.EQUALIZER) },
-                                onOpenArtistDetail = { viewModel.navigateTo(AppScreen.ARTIST_DETAIL) },
-                                onOpenStreamingSettings = { viewModel.navigateTo(AppScreen.UPGRADE_STREAMING) }
+                                onOpenArtistDetail = {
+                                    val artistId = uiState.currentTrack.artistId
+                                    if (artistId.isNotBlank()) viewModel.openCollection("ar:$artistId")
+                                },
+                                onOpenStreamingSettings = { viewModel.navigateTo(AppScreen.UPGRADE_STREAMING) },
+                                onQueueItemClick = { viewModel.playQueueIndex(it) },
+                                onRelatedClick = { track ->
+                                    viewModel.playTrack(track, from = "Podobné skladby")
+                                },
+                                onOpenSleepTimer = { viewModel.setShowSleepTimerModal(true) },
+                                onDownloadCurrentTrack = { viewModel.downloadTrack(uiState.currentTrack) },
+                                onShareTrack = { track ->
+                                    val sendIntent = android.content.Intent().apply {
+                                        action = android.content.Intent.ACTION_SEND
+                                        putExtra(android.content.Intent.EXTRA_TEXT, "Počúvam skladbu „${track.title}“ od ${track.artist} cez SoundWave!")
+                                        type = "text/plain"
+                                    }
+                                    context.startActivity(android.content.Intent.createChooser(sendIntent, "Zdieľať skladbu"))
+                                },
+                                onOpenTrackMenu = { viewModel.setTrackMenuTarget(it) },
+                                onRemoveFromQueue = { viewModel.removeFromQueue(it) },
+                                onClearUpcomingQueue = { viewModel.clearUpcomingQueue() }
                             )
                         }
                         AppScreen.EQUALIZER -> {
@@ -262,7 +369,8 @@ fun SoundWaveApp(
                                 onToggleGapless = { viewModel.toggleGapless() },
                                 onCrossfadeChange = { viewModel.setCrossfadeSeconds(it) },
                                 onClearCache = { viewModel.clearStreamCache() },
-                                onRunDiagnostics = { viewModel.runTranscodingDiagnostics() }
+                                onRunDiagnostics = { viewModel.runTranscodingDiagnostics() },
+                                onClearDownloads = { viewModel.clearAllDownloads() }
                             )
                         }
                         AppScreen.SERVER_LOGIN -> {
@@ -278,7 +386,8 @@ fun SoundWaveApp(
                                 onTogglePreferFlac = { viewModel.toggleLoginPreferFlac() },
                                 onCycleTranscodeOption = { viewModel.cycleLoginTranscodeOption() },
                                 onConnectServer = { viewModel.connectToServer() },
-                                onFillDemoServer = { viewModel.fillDemoServerData() }
+                                onFillDemoServer = { viewModel.fillDemoServerData() },
+                                onLogout = { viewModel.logout() }
                             )
                         }
                     }
@@ -292,31 +401,22 @@ fun SoundWaveApp(
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
         ) {
-            if (uiState.currentScreen != AppScreen.NOW_PLAYING && uiState.currentScreen != AppScreen.SERVER_LOGIN) {
-                val miniTrack = if (uiState.currentScreen == AppScreen.EQUALIZER) {
-                    uiState.currentTrack.copy(title = "Midnight Resonance", artist = "Acoustic Dimension")
-                } else {
-                    uiState.currentTrack
-                }
-                val subtitle = when (uiState.currentScreen) {
-                    AppScreen.EQUALIZER -> "Acoustic Dimension • 24-bit FLAC"
-                    AppScreen.ARTIST_DETAIL -> "Mr.Kitty • Time"
-                    AppScreen.PLAYLIST_DETAIL -> "Mr.Kitty • FLAC 24-BIT"
-                    AppScreen.UPGRADE_STREAMING -> "Mr.Kitty • FLAC 96kHz Direct"
-                    else -> "Mr.Kitty • Navidrome"
-                }
-                val badge = when (uiState.currentScreen) {
-                    AppScreen.UPGRADE_STREAMING -> "24-BIT"
-                    else -> "FLAC"
-                }
+            if (hasTrack &&
+                uiState.currentScreen != AppScreen.NOW_PLAYING &&
+                uiState.currentScreen != AppScreen.SERVER_LOGIN
+            ) {
+                val track = uiState.currentTrack
+                val subtitle = listOf(track.artist, track.album)
+                    .filter { it.isNotBlank() }
+                    .joinToString(" • ")
 
                 GlassMiniPlayerDock(
-                    track = miniTrack,
+                    track = track,
                     isPlaying = uiState.isPlaying,
                     progress = uiState.playbackProgress,
-                    isLiked = uiState.currentTrack.id in uiState.likedTrackIds,
+                    isLiked = track.id in uiState.likedTrackIds,
                     subtitleVariant = subtitle,
-                    badgeText = badge,
+                    badgeText = track.badge,
                     showSkipPrevious = uiState.currentScreen == AppScreen.EQUALIZER,
                     showCastButton = uiState.currentScreen in setOf(
                         AppScreen.HOME,
@@ -325,7 +425,7 @@ fun SoundWaveApp(
                     ),
                     showAirPodsSubtitle = uiState.currentScreen == AppScreen.HOME,
                     onDockClick = { viewModel.navigateTo(AppScreen.NOW_PLAYING) },
-                    onLikeClick = { viewModel.toggleTrackLike(uiState.currentTrack.id) },
+                    onLikeClick = { viewModel.toggleTrackLike(track.id) },
                     onPlayPauseClick = { viewModel.togglePlayPause() },
                     onNextClick = { viewModel.skipToNextTrack() },
                     onPreviousClick = { viewModel.skipToPreviousTrack() },
@@ -358,7 +458,56 @@ fun SoundWaveApp(
                     viewModel.navigateTo(AppScreen.EQUALIZER)
                     viewModel.setShowAutoEqModal(true)
                 },
-                onDismiss = { viewModel.setShowScreenSwitcherSheet(false) }
+                onDismiss = { viewModel.setShowScreenSwitcherSheet(false) },
+                onLogout = if (uiState.isLoggedIn) {
+                    {
+                        viewModel.setShowScreenSwitcherSheet(false)
+                        viewModel.logout()
+                    }
+                } else null
+            )
+        }
+
+        // Sleep Timer Sheet
+        if (uiState.showSleepTimerModal) {
+            SleepTimerBottomSheet(
+                currentOption = uiState.sleepTimerOption,
+                remainingSeconds = uiState.sleepTimerRemainingSec,
+                onDismiss = { viewModel.setShowSleepTimerModal(false) },
+                onSelectOption = { viewModel.setSleepTimer(it) }
+            )
+        }
+
+        // Track Actions Sheet
+        uiState.trackMenuTarget?.let { track ->
+            val isDownloaded = track.id in uiState.downloadedTrackIds
+            val isDownloading = track.id in uiState.downloadingTrackIds
+            val isLiked = track.id in uiState.likedTrackIds
+            TrackActionsBottomSheet(
+                track = track,
+                isDownloaded = isDownloaded,
+                isDownloading = isDownloading,
+                isLiked = isLiked,
+                onDismiss = { viewModel.setTrackMenuTarget(null) },
+                onPlayNow = { viewModel.playTrack(track, openFullPlayer = true) },
+                onPlayNext = { viewModel.playNext(track) },
+                onAddToQueue = { viewModel.addToQueue(track) },
+                onDownload = { viewModel.downloadTrack(track) },
+                onDeleteDownload = { viewModel.deleteDownloadedTrack(track.id) },
+                onToggleLike = { viewModel.toggleTrackLike(track.id) },
+                onShare = {
+                    val sendIntent = android.content.Intent().apply {
+                        action = android.content.Intent.ACTION_SEND
+                        putExtra(
+                            android.content.Intent.EXTRA_TEXT,
+                            "Počúvam skladbu „${track.title}“ od ${track.artist} cez SoundWave!"
+                        )
+                        type = "text/plain"
+                    }
+                    context.startActivity(
+                        android.content.Intent.createChooser(sendIntent, "Zdieľať skladbu")
+                    )
+                }
             )
         }
     }

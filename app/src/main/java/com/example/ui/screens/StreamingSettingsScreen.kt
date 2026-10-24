@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.CleaningServices
 import androidx.compose.material.icons.filled.CloudDone
 import androidx.compose.material.icons.filled.DataSaverOn
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DeveloperBoard
 import androidx.compose.material.icons.filled.Dns
 import androidx.compose.material.icons.filled.Equalizer
@@ -118,7 +119,8 @@ fun StreamingSettingsScreen(
     onToggleGapless: () -> Unit,
     onCrossfadeChange: (Int) -> Unit,
     onClearCache: () -> Unit,
-    onRunDiagnostics: () -> Unit
+    onRunDiagnostics: () -> Unit,
+    onClearDownloads: () -> Unit = {}
 ) {
     LazyColumn(
         modifier = Modifier
@@ -175,10 +177,13 @@ fun StreamingSettingsScreen(
                             horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                             Text(
-                                text = "music.homebox",
+                                text = if (uiState.isLoggedIn) uiState.serverHost else "Nepripojené",
                                 color = OnSurface,
                                 fontSize = 16.sp,
-                                fontWeight = FontWeight.SemiBold
+                                fontWeight = FontWeight.SemiBold,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f, fill = false)
                             )
                             Box(
                                 modifier = Modifier
@@ -187,7 +192,11 @@ fun StreamingSettingsScreen(
                                     .padding(horizontal = 6.dp, vertical = 2.dp)
                             ) {
                                 Text(
-                                    text = "ONLINE",
+                                    text = when {
+                                        !uiState.isLoggedIn -> "PRIHLÁSIŤ"
+                                        uiState.pingMs >= 0 -> "ONLINE"
+                                        else -> "NEDOSTUPNÝ"
+                                    },
                                     color = Secondary,
                                     fontSize = 9.sp,
                                     fontWeight = FontWeight.Bold
@@ -195,7 +204,7 @@ fun StreamingSettingsScreen(
                             }
                         }
                         Text(
-                            text = "Subsonic v1.16+ • Audiophile Master Profil",
+                            text = uiState.serverInfoText.ifBlank { "Klikni a pripoj sa k Navidrome serveru" },
                             color = Outline,
                             fontSize = 12.sp,
                             maxLines = 1,
@@ -216,14 +225,14 @@ fun StreamingSettingsScreen(
                             modifier = Modifier.size(14.dp)
                         )
                         Text(
-                            text = "18 ms",
+                            text = if (uiState.pingMs >= 0) "${uiState.pingMs} ms" else "— ms",
                             color = SecondaryFixed,
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
                     Text(
-                        text = "Direct SSL",
+                        text = if (uiState.serverUrl.startsWith("https://")) "HTTPS" else "HTTP",
                         color = Outline,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold
@@ -683,7 +692,7 @@ fun StreamingSettingsScreen(
                                     fontWeight = FontWeight.SemiBold
                                 )
                                 Text(
-                                    text = "Intel QuickSync aktívny na hoste music.homebox",
+                                    text = "Nastavuje sa na serveri (Navidrome / ffmpeg) – prepínač je zatiaľ len vizuálny",
                                     color = Outline,
                                     fontSize = 11.sp
                                 )
@@ -1106,6 +1115,50 @@ fun StreamingSettingsScreen(
                             modifier = Modifier.size(18.dp)
                         )
                     }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(SurfaceContainerHigh)
+                            .clickable { onClearDownloads() }
+                            .padding(12.dp)
+                            .testTag("clear_downloads_btn"),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = null,
+                                tint = Primary,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Column {
+                                Text(
+                                    text = "Vymazať stiahnuté offline skladby",
+                                    color = OnSurface,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                                Text(
+                                    text = "${uiState.downloadedTracks.size} skladieb zaberá ${uiState.downloadedSizeText}",
+                                    color = Outline,
+                                    fontSize = 11.sp
+                                )
+                            }
+                        }
+
+                        Icon(
+                            imageVector = Icons.Default.ChevronRight,
+                            contentDescription = null,
+                            tint = Outline,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
                 }
             }
         }
@@ -1142,7 +1195,7 @@ fun StreamingSettingsScreen(
 
                 AnimatedVisibility(visible = uiState.diagnosticResultVisible) {
                     Text(
-                        text = "ffmpeg render: 0.12x RT • Subsonic Ping: 16ms • Status: OK",
+                        text = uiState.diagnosticResultText,
                         color = Secondary,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -1206,7 +1259,8 @@ fun ServerLoginScreen(
     onTogglePreferFlac: () -> Unit,
     onCycleTranscodeOption: () -> Unit,
     onConnectServer: () -> Unit,
-    onFillDemoServer: () -> Unit
+    onFillDemoServer: () -> Unit,
+    onLogout: () -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -1341,6 +1395,17 @@ fun ServerLoginScreen(
                             fontSize = 14.sp
                         ),
                         cursorBrush = SolidColor(Primary),
+                        decorationBox = { innerTextField ->
+                            if (uiState.serverUrl.isEmpty()) {
+                                Text(
+                                    text = "https://vas-server.sk:4533",
+                                    color = OnSurfaceVariant.copy(alpha = 0.5f),
+                                    fontSize = 14.sp,
+                                    fontFamily = PlusJakartaSans
+                                )
+                            }
+                            innerTextField()
+                        },
                         modifier = Modifier
                             .weight(1f)
                             .testTag("login_server_url_input")
@@ -1402,6 +1467,17 @@ fun ServerLoginScreen(
                             fontSize = 14.sp
                         ),
                         cursorBrush = SolidColor(Primary),
+                        decorationBox = { innerTextField ->
+                            if (uiState.username.isEmpty()) {
+                                Text(
+                                    text = "Používateľské meno",
+                                    color = OnSurfaceVariant.copy(alpha = 0.5f),
+                                    fontSize = 14.sp,
+                                    fontFamily = PlusJakartaSans
+                                )
+                            }
+                            innerTextField()
+                        },
                         modifier = Modifier
                             .weight(1f)
                             .testTag("login_username_input")
@@ -1460,6 +1536,17 @@ fun ServerLoginScreen(
                             fontSize = 14.sp
                         ),
                         cursorBrush = SolidColor(Primary),
+                        decorationBox = { innerTextField ->
+                            if (uiState.password.isEmpty()) {
+                                Text(
+                                    text = "Heslo k vášmu účtu",
+                                    color = OnSurfaceVariant.copy(alpha = 0.5f),
+                                    fontSize = 14.sp,
+                                    fontFamily = PlusJakartaSans
+                                )
+                            }
+                            innerTextField()
+                        },
                         modifier = Modifier
                             .weight(1f)
                             .testTag("login_password_input")
@@ -1486,7 +1573,7 @@ fun ServerLoginScreen(
                             .padding(10.dp)
                     ) {
                         Text(
-                            text = "Odporúčame vygenerovať si osobný Subsonic App Token v používateľských nastaveniach Navidrome pre vyššiu bezpečnosť.",
+                            text = "Zadaj heslo svojho Navidrome účtu. Aplikácia heslo neukladá – po úspešnom prihlásení si zapamätá len bezpečnostný token (md5 hash s náhodnou soľou).",
                             color = Secondary,
                             fontSize = 12.sp
                         )
@@ -1708,7 +1795,20 @@ fun ServerLoginScreen(
                     )
                 }
 
-                // Live Connection Diagnostic Simulation Pill
+                if (uiState.connectionError != null) {
+                    Text(
+                        text = uiState.connectionError ?: "",
+                        color = PrimaryFixedDim,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .testTag("login_error_text")
+                    )
+                }
+
+                // Live connection status pill
                 AnimatedVisibility(visible = uiState.isConnectingServer || uiState.isServerConnectedSuccess) {
                     Row(
                         modifier = Modifier
@@ -1728,16 +1828,26 @@ fun ServerLoginScreen(
                         Column {
                             Text(
                                 text = if (uiState.isServerConnectedSuccess) {
-                                    "Autentifikácia overená (FLAC knižnica pripravená)"
+                                    "Prihlásenie overené"
                                 } else {
-                                    "Testujem Subsonic API handshake..."
+                                    "Overujem prihlásenie na serveri..."
                                 },
                                 color = OnSurface,
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                text = "Ping: 34ms • Server: Navidrome v0.52.5",
+                                text = if (uiState.isServerConnectedSuccess) {
+                                    buildString {
+                                        if (uiState.pingMs >= 0) append("Ping: ${uiState.pingMs} ms")
+                                        if (uiState.serverInfoText.isNotBlank()) {
+                                            if (isNotEmpty()) append(" • ")
+                                            append(uiState.serverInfoText)
+                                        }
+                                    }
+                                } else {
+                                    "Čakám na odpoveď servera…"
+                                },
                                 color = OnSurfaceVariant,
                                 fontSize = 12.sp
                             )
@@ -1767,11 +1877,33 @@ fun ServerLoginScreen(
                         .size(18.dp)
                 )
                 Text(
-                    text = "Bezpečné úložisko zariadenia. Poverenia sú šifrované v lokálnej kľúčenke (Keychain) a priamo komunikujú výhradne s vaším koncovým bodom.",
+                    text = "Heslo sa neukladá. Aplikácia si zapamätá len prihlasovací token (md5 hash s náhodnou soľou) v súkromnom úložisku aplikácie, ktoré je vylúčené zo zálohovania. Komunikuje výhradne s adresou tvojho servera. Poznámka: http:// spojenie nie je šifrované – v domácej sieti alebo cez Tailscale je to bežné, mimo nej používaj https://.",
                     color = OnSurfaceVariant,
                     fontSize = 12.sp,
                     lineHeight = 18.sp
                 )
+            }
+        }
+
+        if (uiState.isLoggedIn) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(46.dp)
+                        .clip(RoundedCornerShape(50))
+                        .background(SurfaceContainerHigh)
+                        .clickable { onLogout() }
+                        .testTag("login_logout_btn"),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Odhlásiť sa a zabudnúť server",
+                        color = OnSurface,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
             }
         }
     }
