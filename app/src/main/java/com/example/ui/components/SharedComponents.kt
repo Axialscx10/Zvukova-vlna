@@ -234,46 +234,30 @@ fun SoundWaveBrandLogoCircle(
     useGraphicEqIcon: Boolean = false,
     size: Dp = 34.dp
 ) {
-    if (useGraphicEqIcon) {
-        Box(
-            modifier = Modifier
-                .size(size)
-                .shadow(12.dp, CircleShape, ambientColor = PrimaryContainer, spotColor = PrimaryContainer)
-                .clip(CircleShape)
-                .background(PrimaryContainer),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.GraphicEq,
-                contentDescription = "SoundWave",
-                tint = OnPrimaryContainer,
-                modifier = Modifier.size(20.dp)
-            )
-        }
-    } else {
-        Box(
-            modifier = Modifier
-                .size(size)
-                .clip(CircleShape)
-                .background(Color(0xFF1A0507))
-                .border(2.dp, Color(0xFFFF1E27), CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(size * 0.62f)
-                    .clip(CircleShape)
-                    .background(Color(0xFFFF1E27)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.PlayArrow,
-                    contentDescription = "SoundWave Logo",
-                    tint = Color.White,
-                    modifier = Modifier.size(size * 0.42f)
+    Box(
+        modifier = Modifier
+            .size(size)
+            .clip(CircleShape)
+            .background(
+                androidx.compose.ui.graphics.Brush.radialGradient(
+                    colors = listOf(Color(0xFF28204E), Color(0xFF0A0B14))
                 )
-            }
-        }
+            )
+            .border(
+                width = 1.5.dp,
+                brush = androidx.compose.ui.graphics.Brush.horizontalGradient(
+                    colors = listOf(Color(0xFF00E5FF), Color(0xFFFF5545))
+                ),
+                shape = CircleShape
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = if (useGraphicEqIcon) Icons.Default.GraphicEq else Icons.Default.Headphones,
+            contentDescription = "SoundWave Logo",
+            tint = if (useGraphicEqIcon) Color(0xFF00E5FF) else Color.White,
+            modifier = Modifier.size(size * 0.58f)
+        )
     }
 }
 
