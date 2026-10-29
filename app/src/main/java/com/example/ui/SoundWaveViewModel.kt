@@ -72,6 +72,7 @@ data class SoundWaveUiState(
     // Playback State
     val currentTrack: TrackItem = NoTrack,
     val isPlaying: Boolean = false,
+    val isMiniPlayerDismissed: Boolean = false,
     val playbackProgress: Float = 0f,
     val positionMs: Long = 0L,
     val durationMs: Long = 0L,
@@ -322,7 +323,8 @@ class SoundWaveViewModel(app: Application) : AndroidViewModel(app) {
                 state.copy(
                     backStack = state.backStack + state.currentScreen,
                     currentScreen = screen,
-                    showScreenSwitcherSheet = false
+                    showScreenSwitcherSheet = false,
+                    isMiniPlayerDismissed = if (screen == AppScreen.NOW_PLAYING) false else state.isMiniPlayerDismissed
                 )
             }
         }
@@ -986,6 +988,7 @@ class SoundWaveViewModel(app: Application) : AndroidViewModel(app) {
                 historyTracks = hist,
                 playingFrom = from,
                 isPlaying = true,
+                isMiniPlayerDismissed = false,
                 playbackProgress = 0f,
                 positionMs = 0L,
                 durationMs = track.durationSec * 1000L,
@@ -1051,8 +1054,16 @@ class SoundWaveViewModel(app: Application) : AndroidViewModel(app) {
             } else {
                 if (c.playbackState == Player.STATE_IDLE) c.prepare()
                 c.play()
+                _uiState.update { it.copy(isMiniPlayerDismissed = false) }
             }
         }
+    }
+
+    fun dismissMiniPlayer() {
+        withController { c ->
+            c.pause()
+        }
+        _uiState.update { it.copy(isMiniPlayerDismissed = true, isPlaying = false) }
     }
 
     fun skipToNextTrack() {

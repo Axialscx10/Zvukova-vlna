@@ -402,6 +402,7 @@ fun SoundWaveApp(
                 .fillMaxWidth()
         ) {
             if (hasTrack &&
+                !uiState.isMiniPlayerDismissed &&
                 uiState.currentScreen != AppScreen.NOW_PLAYING &&
                 uiState.currentScreen != AppScreen.SERVER_LOGIN
             ) {
@@ -418,18 +419,15 @@ fun SoundWaveApp(
                     subtitleVariant = subtitle,
                     badgeText = track.badge,
                     showSkipPrevious = uiState.currentScreen == AppScreen.EQUALIZER,
-                    showCastButton = uiState.currentScreen in setOf(
-                        AppScreen.HOME,
-                        AppScreen.LIBRARY,
-                        AppScreen.PLAYLIST_DETAIL
-                    ),
-                    showAirPodsSubtitle = uiState.currentScreen == AppScreen.HOME,
+                    showCastButton = false,
+                    showAirPodsSubtitle = false,
                     onDockClick = { viewModel.navigateTo(AppScreen.NOW_PLAYING) },
                     onLikeClick = { viewModel.toggleTrackLike(track.id) },
                     onPlayPauseClick = { viewModel.togglePlayPause() },
                     onNextClick = { viewModel.skipToNextTrack() },
                     onPreviousClick = { viewModel.skipToPreviousTrack() },
                     onCastClick = { viewModel.navigateTo(AppScreen.UPGRADE_STREAMING) },
+                    onDismiss = { viewModel.dismissMiniPlayer() },
                     modifier = if (!isMainTabScreen) {
                         Modifier.windowInsetsPadding(WindowInsets.navigationBars)
                     } else {

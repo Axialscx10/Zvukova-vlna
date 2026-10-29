@@ -31,6 +31,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Album
 import androidx.compose.material.icons.filled.Cast
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Dns
 import androidx.compose.material.icons.filled.Equalizer
 import androidx.compose.material.icons.filled.Explore
@@ -497,175 +498,125 @@ fun GlassMiniPlayerDock(
     onNextClick: () -> Unit,
     onPreviousClick: () -> Unit = {},
     onCastClick: () -> Unit = {},
+    onDismiss: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 6.dp)
-            .shadow(24.dp, RoundedCornerShape(16.dp), spotColor = Color.Black)
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color(0xEB1C1B1B))
-            .border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(16.dp))
+            .padding(horizontal = 8.dp, vertical = 3.dp)
+            .shadow(16.dp, RoundedCornerShape(12.dp), spotColor = Color.Black)
+            .clip(RoundedCornerShape(12.dp))
+            .background(Color(0xFF1B1A22)) // 100% solid opaque - zero bleed-through!
+            .border(1.dp, Color(0xFF2C2B36), RoundedCornerShape(12.dp))
             .clickable { onDockClick() }
             .testTag("mini_player_dock")
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            // Top Scrubbing Line (unless bottom style for Home)
-            if (!showAirPodsSubtitle) {
+            // Slim progress line (2.dp)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp)
+                    .background(Color(0xFF262530))
+            ) {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(2.5.dp)
-                        .background(SurfaceContainerHighest)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(progress.coerceIn(0.05f, 1f))
-                            .fillMaxHeight()
-                            .background(
-                                Brush.horizontalGradient(
-                                    listOf(Primary, PrimaryContainer)
-                                )
+                        .fillMaxWidth(progress.coerceIn(0.01f, 1f))
+                        .fillMaxHeight()
+                        .background(
+                            Brush.horizontalGradient(
+                                listOf(Primary, PrimaryContainer)
                             )
-                    )
-                }
+                        )
+                )
             }
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .padding(start = 8.dp, end = 6.dp, top = 4.dp, bottom = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.weight(1f)
+                // Album Art (38dp x 38dp)
+                Box(
+                    modifier = Modifier
+                        .size(38.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(SurfaceContainerHighest)
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(44.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(SurfaceContainerHighest)
+                    NetImage(
+                        url = track.imageUrl,
+                        contentDescription = track.title,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(10.dp))
+
+                // Track title & badge, artist/subtitle
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        NetImage(
-                            url = track.imageUrl,
-                            contentDescription = track.title,
-                            modifier = Modifier.fillMaxSize()
+                        Text(
+                            text = track.title,
+                            color = OnSurface,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f, fill = false) // Title yields space to badge!
                         )
-                        if (badgeText.endsWith("24-BIT") || badgeText.endsWith("32-BIT")) {
+                        if (badgeText.isNotBlank()) {
                             Box(
                                 modifier = Modifier
-                                    .align(Alignment.BottomCenter)
-                                    .fillMaxWidth()
-                                    .background(PrimaryContainer.copy(alpha = 0.9f))
-                                    .padding(vertical = 1.dp),
-                                contentAlignment = Alignment.Center
+                                    .clip(RoundedCornerShape(4.dp))
+                                    .background(SecondaryFixed.copy(alpha = 0.22f))
+                                    .padding(horizontal = 4.dp, vertical = 1.dp)
                             ) {
                                 Text(
-                                    text = badgeText.takeLast(6),
-                                    color = OnPrimaryContainer,
-                                    fontSize = 8.sp,
-                                    fontWeight = FontWeight.ExtraBold
+                                    text = badgeText,
+                                    color = SecondaryFixed,
+                                    fontSize = 9.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    softWrap = false, // Never wrap vertically!
+                                    maxLines = 1
                                 )
                             }
                         }
                     }
 
-                    Spacer(modifier = Modifier.width(10.dp))
+                    Spacer(modifier = Modifier.height(1.dp))
 
-                    Column(modifier = Modifier.weight(1f)) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Text(
-                                text = track.title,
-                                color = OnSurface,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            if (!showAirPodsSubtitle && badgeText.isNotBlank()) {
-                                Box(
-                                    modifier = Modifier
-                                        .clip(RoundedCornerShape(4.dp))
-                                        .background(SecondaryFixed.copy(alpha = 0.18f))
-                                        .padding(horizontal = 5.dp, vertical = 1.dp)
-                                ) {
-                                    Text(
-                                        text = badgeText,
-                                        color = SecondaryFixed,
-                                        fontSize = 9.sp,
-                                        fontWeight = FontWeight.ExtraBold
-                                    )
-                                }
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(2.dp))
-
-                        Text(
-                            text = subtitleVariant,
-                            color = OnSurfaceVariant,
-                            fontSize = 12.sp,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
+                    Text(
+                        text = subtitleVariant.ifBlank { track.artist },
+                        color = OnSurfaceVariant,
+                        fontSize = 11.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
 
+                Spacer(modifier = Modifier.width(4.dp))
+
+                // Controls: Play/Pause, Next, and Dismiss ("X")
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
-                    if (showSkipPrevious) {
-                        IconButton(
-                            onClick = onPreviousClick,
-                            modifier = Modifier.size(40.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.SkipPrevious,
-                                contentDescription = "Predchádzajúca",
-                                tint = OnSurface,
-                                modifier = Modifier.size(22.dp)
-                            )
-                        }
-                    } else if (showCastButton) {
-                        IconButton(
-                            onClick = onCastClick,
-                            modifier = Modifier.size(40.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Cast,
-                                contentDescription = "Zariadenia",
-                                tint = SecondaryFixed,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
-                    } else {
-                        IconButton(
-                            onClick = onLikeClick,
-                            modifier = Modifier.size(40.dp)
-                        ) {
-                            Icon(
-                                imageVector = if (isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                                contentDescription = "Obľúbené",
-                                tint = if (isLiked) PrimaryContainer else OnSurfaceVariant,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
-                    }
-
-                    // Crimson / Primary Play/Pause Button
+                    // Play / Pause Button
                     Box(
                         modifier = Modifier
-                            .size(42.dp)
-                            .shadow(10.dp, CircleShape, ambientColor = PrimaryContainer, spotColor = PrimaryContainer)
+                            .size(36.dp)
+                            .shadow(6.dp, CircleShape, spotColor = PrimaryContainer)
                             .clip(CircleShape)
-                            .background(if (showSkipPrevious) Primary else PrimaryContainer)
+                            .background(PrimaryContainer)
                             .clickable { onPlayPauseClick() }
                             .testTag("mini_player_play_pause"),
                         contentAlignment = Alignment.Center
@@ -673,44 +624,40 @@ fun GlassMiniPlayerDock(
                         Icon(
                             imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                             contentDescription = if (isPlaying) "Pozastaviť" else "Prehrať",
-                            tint = if (showSkipPrevious) OnPrimary else OnPrimaryContainer,
-                            modifier = Modifier.size(24.dp)
+                            tint = OnPrimaryContainer,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
 
+                    // Next Button
                     IconButton(
                         onClick = onNextClick,
                         modifier = Modifier
-                            .size(40.dp)
+                            .size(34.dp)
                             .testTag("mini_player_next")
                     ) {
                         Icon(
                             imageVector = Icons.Default.SkipNext,
                             contentDescription = "Ďalšia skladba",
                             tint = OnSurface,
-                            modifier = Modifier.size(22.dp)
+                            modifier = Modifier.size(20.dp)
                         )
                     }
-                }
-            }
 
-            if (showAirPodsSubtitle) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(3.dp)
-                        .background(SurfaceContainerLow)
-                ) {
-                    Box(
+                    // Close / Dismiss Mini-Player Button
+                    IconButton(
+                        onClick = onDismiss,
                         modifier = Modifier
-                            .fillMaxWidth(progress.coerceIn(0.05f, 1f))
-                            .fillMaxHeight()
-                            .background(
-                                Brush.horizontalGradient(
-                                    listOf(Primary, PrimaryContainer)
-                                )
-                            )
-                    )
+                            .size(32.dp)
+                            .testTag("mini_player_dismiss")
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Zavrieť mini prehrávač",
+                            tint = OnSurfaceVariant,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
                 }
             }
         }
@@ -723,7 +670,7 @@ fun SoundWaveBottomNavBar(
     onTabSelected: (AppScreen) -> Unit
 ) {
     Surface(
-        color = Surface.copy(alpha = 0.94f),
+        color = Color(0xFF111015), // 100% solid opaque - zero bleed-through!
         shadowElevation = 12.dp,
         modifier = Modifier.fillMaxWidth()
     ) {

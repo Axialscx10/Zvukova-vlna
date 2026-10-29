@@ -201,3 +201,24 @@ enum class SleepTimerOption(val label: String, val minutes: Int) {
     MIN_60("60 minút", 60),
     END_OF_TRACK("Po dohraní aktuálnej skladby", -1)
 }
+
+/**
+ * Intelligently cleans raw folder names, file names, or unformatted titles returned by Subsonic / Navidrome.
+ * Strips leading track/folder prefixes like "00 - ", "00-", "01. ", "311. ",
+ * and formats underscore-separated filenames like "dio-evil_or_divine..." into readable titles.
+ */
+fun cleanDisplayTitle(raw: String): String {
+    if (raw.isBlank()) return raw
+    var s = raw.trim()
+    // Strip leading track or album numbers like "00 - ", "00-", "01. ", "02 - ", "311. "
+    s = s.replace(Regex("""^\d{1,4}\s*[-._]\s*"""), "")
+    // If it's a raw snake_case or kebab-case filename like "dio-evil_or_divine_live_in_new_york"
+    if (s.contains('_') || (s.contains('-') && !s.contains(" - ") && !s.contains(' '))) {
+        s = s.replace('_', ' ').replace('-', ' ')
+        s = s.split(Regex("""\s+""")).joinToString(" ") { word ->
+            word.replaceFirstChar { if (it.isLowerCase()) it.titlecase(java.util.Locale.ROOT) else it.toString() }
+        }
+    }
+    return s.ifBlank { raw }
+}
+

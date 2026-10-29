@@ -358,7 +358,7 @@ class SubsonicApi(
         return CollectionDetail(
             id = "al:$rawId",
             kind = "Album",
-            title = a.optString("name"),
+            title = cleanDisplayTitle(a.optString("name")),
             subtitle = subtitle,
             coverUrl = coverUrl(cover, 800),
             metaLine = metaLine(tracks),
@@ -471,9 +471,9 @@ class SubsonicApi(
         val plays = o.optInt("playCount")
         return TrackItem(
             id = id,
-            title = o.optString("title").ifBlank { "Bez názvu" },
+            title = cleanDisplayTitle(o.optString("title").ifBlank { "Bez názvu" }),
             artist = o.optString("artist").ifBlank { "Neznámy interpret" },
-            album = o.optString("album"),
+            album = cleanDisplayTitle(o.optString("album")),
             duration = formatDuration(durationSec),
             badge = badge,
             imageUrl = coverUrl(cover, 600),
@@ -510,7 +510,7 @@ class SubsonicApi(
         }
         return AlbumItem(
             id = "al:$id",
-            title = o.optString("name").ifBlank { o.optString("title") }.ifBlank { "Bez názvu" },
+            title = cleanDisplayTitle(o.optString("name").ifBlank { o.optString("title") }.ifBlank { "Bez názvu" }),
             subtitle = subtitle,
             techSpec = spec,
             badge = "",
